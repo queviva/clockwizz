@@ -1,0 +1,676 @@
+<!doctype html>
+<html>
+<head>
+<title>clock wise</title>
+<style id="ss0">
+
+@font-face {
+    font-family: "Good Dog";
+    src: url("migs/GoodDog.otf");
+}
+
+@font-face {
+    font-family: "KaushanScript-Regular";
+    src: url("migs/KaushanScript-Regular.otf");
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+div {
+    overflow: hidden;
+}
+
+button {
+    height: 30px;
+    width: 250px;
+    font-size: 22px;
+    visibility: visible;
+    outline: none;
+}
+
+select {
+    height: 30px;
+    width: 250px;
+    font-size: 22px;
+    visibility: visible;
+    outline: none;
+}
+
+input {
+    height: 30px;
+    width: 250px;
+    font-size: 22px;
+    visibility: visible;
+    outline: none;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    background-color: #c0c0c0;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: #666;
+    opacity: 0.5;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #000;
+    border-radius: 15px;
+    transition: opacity 0.2s linear;
+}
+
+input[type=range]:disabled {
+    background-color: #eee;
+}
+
+input[type=range]:disabled::-webkit-slider-thumb {
+    /*display:none;*/
+    opacity: 0.05;
+    transition: opacity 0.2s linear;
+}
+
+input[type=checkbox] {
+    height: 30px;
+    width: 30px;
+    vertical-align: middle;
+    visibility: visible;
+}
+
+input[type=text] {
+    font-size: 18px;
+}
+
+label {
+    font-size: 26px;
+}
+
+#holder {
+    margin: auto;
+    width: 480px;
+    text-align: center;
+    padding: 0px;
+    font-size: 30px;
+    height: 100vh;
+}
+
+#menu {
+    position: absolute;
+    font-size: 32px;
+    font-family: Arial, sans-serif;
+    top: 0px;
+    right: 0px;
+    background-color: none;
+    overflow: hidden;
+    transition: all 0.2s linear;
+}
+
+</style>
+</head>
+<body>
+<div id="holder">
+
+    <span id="greeting" contenteditable="false"></span>
+    <div><img
+     id="hackBox"
+     src="hackBox0.svg"
+     style="position:absolute;left:200px;"
+     class="clockwizer"
+    ></div>
+
+    <div id="menu">
+        <input id="bacColorInput" type="color">
+        <br>
+        <input id="txtColorInput" type="color">
+        <br>
+        <select id="langPickInput"></select>
+        <br>
+        <select id="fontDropdown"></select>
+        <br>
+        <input style="position:relative;top:5px" id="slider0" type="range" min="5" max="100" value="50">
+        <br>
+        <input style="position:relative;top:3px;left:-5px" id="slider1" type="range" min="0" max="100" value="50">
+        <hr style="position:relative;top:-10px">
+        <input style="position:relative;top:-23px;left:-3px" id="resetDefaultsButt" type="button" value="~ ~ ~ ~ ~">
+    </div>
+
+</div>
+</body>
+<script
+ id="clockWisdomScript"
+ src="clockwisdom.js"
+ data-type="clockWisdom"
+ data-buff="40"
+ data-perc="0.48"
+></script>
+<script>
+
+window.addEventListener('load', e => {
+    
+    let HB = document.getElementById('hackBox'),
+    HBs = HB.style,
+    HBcs = window.getComputedStyle(HB),
+    HBw = parseInt(HBcs.width, 10),
+    WW = window.innerWidth + HBw,
+    curLeft = parseInt(HBs.left, 10) + HBw;
+    
+    document
+    .getElementById('clockWisdomScript')
+    .addEventListener('clockChange', e => {
+        
+        //greeting.innerHTML = 
+        //Math.abs(e.detail.speed).toFixed(3)
+        //> 0.05 ? 'fast' : 'slow';
+        
+        let dir = parseInt(e.detail.dir, 10);
+        let spd = parseInt(e.detail.speed);
+        
+        curLeft = (((
+            //curLeft + (10 * dir)
+            curLeft + (dir * spd)
+        ) % WW) + WW) % WW;
+            
+        HBs.left = ((-1 * HBw) + 1 * curLeft) + 'px';
+        
+    });
+});
+    
+</script>
+<script>
+////////////////////////////////////////////////////////////////////////////////
+// pizzaface - febrero 2019
+/*
+//
+//  + option for generic webapp
+//  + option for generic webapp
+//  + option for generic webapp
+//  = preferences menu
+//    = set background color
+//    = set text color
+//    = set language
+//    = set font
+//      = add new font
+//      = remove font
+//  = save|restore localStorage prefs
+//    = saves on prefs menu close
+//    = restore to default preferences
+//  = expiration date
+//
+*/
+////////////////////////////////////////////////////////////////////////////////
+
+    
+// debugg - reset local storage
+//localStorage.clear();
+
+(function() { // anonymouse closure
+
+
+    // if the app is expired ...
+    if( new Date('November 13 2020').getTime() - new Date().getTime() < 0 ){
+        
+        // alert the user
+        document.body.innerHTML = 'eXp!r3D';
+        
+        // just skip out of the app
+        return;
+        
+    }
+    
+    // useful vars
+    var ratmaster,
+    pageCenter = {
+        x: 0,
+        y: 0
+    },
+    
+    pi = Math.PI,
+    pi2 = 2 * Math.PI,
+    pi6 = Math.PI / 6,
+    chars = {
+        pi: 'Π',
+        theta: 'θ',
+        deg: '°',
+        uml: 'ü',
+        upArrs: '▲▲▲',
+        dnArrs: '▼▼▼'
+    },
+    appMSG = [
+        new LangObj('english,Greetings Earthling,font name'),
+        new LangObj('espanol,Saludos Terricola,nombre de la fuente'),
+        new LangObj('deutsch,Gr' + chars.uml + 'sse Erdling,schriftnamen'),
+        new LangObj('gibberish,Groete Aardse,font naam')
+    ],
+
+    // default preferences for restoration
+    defPrefs = {
+        
+            appName:  'Clock_Wisdom',
+            appTitle: 'Clock Wisdom',
+            
+            bacColor: '#ee8833', //'#ffbb00',//'#eeaa00',
+            txtColor: '#ffeeaa',
+            
+            curLang: 2, // default to aleman
+
+            fontSize: 30,
+            curFont: 2, // default to courier
+            fontList: ['KaushanScript-Regular','Good Dog','Courier','Verdana','Times'],
+            
+            appWidthMin: 480,
+            appWidthMax: window.innerWidth,
+            appWidthCur: 0,
+            
+            coordBuffSize: 30
+            
+    },
+    
+    // preferences to be populated from defaults or storage 
+    prefs = {},
+    
+    // hashtable lookup for overwriting the stylesheet
+    cssHash = {};
+    
+    // populate the css hashtable 
+    for (let i in (r = ss0.sheet.rules)) {
+        cssHash[r[i].selectorText] = r[i];
+    }
+    
+    // method to store prefs locally
+    function storePrefs() {
+        localStorage.setItem(defPrefs.appName, JSON.stringify(prefs));
+    }
+    
+    // method to reset all preferences to defaults
+    function resetDefaultPreferences () {
+        
+        // blank the prefs
+        prefs = {};
+
+        // change all operating preferences back to default
+        for (var i in defPrefs) {
+            // parse this so it's not a pointer
+            prefs[i] = JSON.parse(JSON.stringify(defPrefs[i]));
+        }
+
+        // store the defaults as the local preferences
+        storePrefs();
+            
+    }
+        
+    // either read prefs from local storage, or use defaults and set local
+    if (localStorage[defPrefs.appName]) {
+        prefs = JSON.parse(localStorage[defPrefs.appName]);
+    }
+    else {
+        resetDefaultPreferences();
+    }
+        
+    // an object for creating language strings
+    function LangObj (vals) {
+        
+        // split up the values
+        vals = vals.split(','); 
+        
+        return {
+            langName:   vals[0], 
+            greeting:   vals[1],
+            fontPrompt: vals[2]
+        };
+        
+    }
+    
+    // method to turn a dropdown into a combobobobobox from a list
+    function makeIntoComboBox (
+        selectObj, // dropdown object to modify
+        list, // the items to add to the list
+        handler, // what to run when the value changes
+        defaultSelected, // the selected item in the list
+        addTxt, // string to use for *add*
+        remTxt // string to use for *remove*
+    ) {
+
+        // clear the dropdown of any options
+        selectObj.innerHTML = '';
+
+        // loop through the list - create options for each item
+        for (var i in list) {
+            selectObj.add(new Option(list[i], list[i], false, true));
+        }
+
+        // set the add/remove text strings if specified else use +|-
+        addTxt = addTxt ? addTxt : '+++++';
+        remTxt = remTxt ? remTxt : '- - - - -';
+
+        // set the selected item if specified else use the first
+        selectObj.selectedIndex = (defaultSelected && selectObj[defaultSelected]) ? defaultSelected : 0;
+
+        // set the handler if specified else to empty function 
+        handler = handler && typeof handler === 'function' ? handler : function() {};
+
+        // save the previous selected item
+        selectObj.prevSelected = selectObj.selectedIndex;
+
+        // make options for *remove* and *add*
+        selectObj.add(new Option(remTxt));
+        selectObj.add(new Option(addTxt));
+
+        // add listener for *add* and *remove* item and handle change
+        selectObj.addEventListener('change', function(e) {
+
+            // if the user chooses to add an item ...
+            if (this.value === addTxt) {
+
+                // ask the user which thing to create
+                var tmpOpt = prompt(appMSG[prefs.curLang].fontPrompt);
+
+                // if a value was entered ...
+                if (tmpOpt) {
+
+                    // add it to the font list in prefs
+                    list.push(tmpOpt);
+
+                    // insert it into the dropdown
+                    this.options.add(
+
+                        // create a new option, and select it
+                        new Option(tmpOpt, tmpOpt, false, true),
+
+                        // put it just before the add/remove items
+                        this[this.options.length - 2]
+
+                    );
+
+                    // now run the handler
+                    handler();
+
+                }
+                else { // otherwise the user cancelled the prompt...
+
+                    // reset the dropdown to the previously selected value
+                    this.selectedIndex = this.prevSelected;
+
+                    // kick out of this conditional
+                    return;
+
+                }
+
+
+            }
+            else if (this.value === remTxt) { // otherwise handle *remove* ...
+
+                // do not allow removing of *add*
+                if (this.prevSelected === this.options.length - 2) {
+                    console.log('this should never happen! call me');
+                    this.selectedIndex = this.prevSelected;
+                    return false;
+                }
+
+                // remove this item from the list
+                list.splice(this.prevSelected, 1);
+
+                // remove the item from the dropdown options
+                this.options.remove(this.prevSelected);
+
+                // set the dropdown to the first item
+                this.selectedIndex = 0;
+
+                // run the handler
+                handler();
+
+
+            }
+            else { // otherwise a val was selected so handle that
+
+                // run the handler
+                handler();
+
+            }
+
+        }, false);
+
+        // add a listener that sets the previous selected item
+        selectObj.addEventListener('change', function(e) {
+            if (this.value !== addTxt && this.value !== remTxt) {
+                this.prevSelected = this.selectedIndex;
+            }
+        }, false);
+
+
+    }
+    
+    // setup everthing from prefs
+    function setUpFromPreferences() {
+        
+        // calculate the page center
+        pageCenter.x = ~~(window.innerWidth  / 2);
+        pageCenter.y = ~~(window.innerHeight / 2);
+        
+        // change the title 
+        document.title = prefs.appTitle;
+        
+        // color the background and text colors
+        holder.style.backgroundColor = prefs.bacColor;
+        holder.style.color  = prefs.txtColor;
+        
+        // resize the holder
+        var tmpPad = parseInt(window.getComputedStyle(document.getElementById('holder')).padding);
+        //holder.style.height = window.innerHeight - 2*tmpPad +'px';
+        holder.style.width = (prefs.appWidthMin + ((prefs.appWidthMax-prefs.appWidthMin)*(prefs.appWidthCur/100))) + 'px';
+        
+        // put the greeting in the current language
+        greeting.innerText = appMSG[prefs.curLang].greeting;
+        
+        // set the font for the holder
+        holder.style.fontFamily = prefs.fontList[prefs.curFont];
+        
+        // set the font size for the holder
+        holder.style.fontSize = prefs.fontSize +'px';
+          
+        // other app setup stuff //
+        // ...
+        
+        
+        // preferences menu set up items //
+        
+
+        // set color selectors to the stored values
+        bacColorInput.value = prefs.bacColor;
+        txtColorInput.value = prefs.txtColor;
+        
+        //clear the language picker before populating it
+        langPickInput.innerHTML = '';
+        
+        // create all the options for the lang dropdown
+        appMSG.forEach(function(i){
+            var tmpOpt = document.createElement('option');
+            tmpOpt.text = i.langName;
+            langPickInput.add(tmpOpt);
+        });
+        
+        // select the selected lang
+        langPickInput.selectedIndex = prefs.curLang;
+
+        // make the fontDropdown into a combobox
+        makeIntoComboBox(
+            fontDropdown,
+            prefs.fontList,
+            function(e) {
+                
+                // change the font
+                holder.style.fontFamily = prefs.fontList[fontDropdown.selectedIndex];
+                
+                // remember the font in preferences
+                prefs.curFont = fontDropdown.selectedIndex;
+                
+            },
+            prefs.curFont //,
+            //'*add*',
+            //'*remove*'
+        );
+                  
+        
+        // set the font-size slider to the prefs value
+        slider0.value = prefs.fontSize;
+        
+        // set the app-width slider to the prefs value
+        slider1.value = prefs.appWidthCur;
+
+    }
+
+
+    // handle background color input 
+    bacColorInput.addEventListener('input', function(e){
+        prefs.bacColor = this.value;
+        holder.style.backgroundColor = prefs.bacColor;
+    }, false);
+    
+    // handle text color input
+    txtColorInput.addEventListener('input', function(e){
+        prefs.txtColor = this.value;
+        holder.style.color = prefs.txtColor;
+    }, false);
+    
+    // handle language selection
+    langPickInput.addEventListener('change', function(e){
+        
+        // set the current language
+        prefs.curLang = this.selectedIndex;
+        
+        // change all messages ...
+        greeting.innerText = appMSG[prefs.curLang].greeting;
+        
+    },false);
+    
+    // handle font-size slider
+    slider0.addEventListener('input', function(e){
+        
+        // set the font size in prefs;
+        prefs.fontSize = this.value;
+        
+        // set the font size for the holder
+        holder.style.fontSize = prefs.fontSize +'px';
+          
+        
+    },false);
+    
+    // handle the app-width slider
+    slider1.addEventListener('input', function(e){
+        
+        // set the app width in prefs
+        prefs.appWidthCur = this.value;
+        
+        // set the holder width
+        var tmpPad = parseInt(window.getComputedStyle(document.getElementById('holder')).padding);
+        holder.style.width = (prefs.appWidthMin + ((prefs.appWidthMax-prefs.appWidthMin)*(prefs.appWidthCur/100))) - tmpPad*2 + 'px';
+        
+    },false);
+    
+    // handle reset to defaults button
+    resetDefaultsButt.addEventListener('click', function(e) {
+        resetDefaultPreferences();
+        setUpFromPreferences();
+    }, false);
+
+    // handle the prefs edit menu open|close ...
+    // remember the initial height
+    menu.initH = menu.offsetHeight + 'px';
+    
+    // 'always' on top
+    menu.style.zIndex = 1000;
+    
+    // always close the prefs menu on load
+    menu.style.height = '0px';
+    
+    // listen to the keyboard
+    window.addEventListener('keydown', function(e) {
+        
+        // if user hits space bar and control key ...
+        if (e.keyCode === 32 && e.ctrlKey) {
+            
+            // open|close the prefs menu div
+            menu.style.height = menu.style.height === menu.initH ? '0px' : menu.initH;
+            
+            // if closing the menu ...
+            if(menu.style.height === '0px'){
+                
+                // save the preferences
+                storePrefs();
+                
+            } 
+            
+        }
+        
+    }, false);
+    
+    // recenter on resize
+    window.addEventListener('resize', function(e) {
+        
+        // debugg - should probably ONLY recenter on resize
+        //setUpFromPreferences();
+        
+        prefs.appWidthMax = window.innerWidth;
+        
+        // set the holder width
+        var tmpPad = parseInt(window.getComputedStyle(document.getElementById('holder')).padding);
+        holder.style.width = (prefs.appWidthMin + ((prefs.appWidthMax-prefs.appWidthMin)*(prefs.appWidthCur/100))) - tmpPad*2 + 'px';
+        
+
+    }, false);
+    
+    // for holding a buffer list of mouse coords
+    let coords = [
+        {x:0,y:0},
+        {x:0,y:0},
+        {x:0,y:0}
+    ],
+    clockVals = [],
+    atans = [];
+    
+    // fill the clockVals with 0's at first
+    for(let i = 0, j = prefs.coordBuffSize; i < j; i++) {
+        clockVals[i] = 0; // 0 = clock, 1 = counter
+        atans[i] = 0;
+    }
+    
+    // rememeber text
+    greeting.addEventListener('input', function(e){
+        
+        //console.log(this.innerText);
+        appMSG[prefs.curLang].greeting = this.innerText;
+        storePrefs();
+        
+    },false);
+
+    // save state when the page closes
+    window.addEventListener('beforeunload', function(e) {
+
+        storePrefs();
+
+    }, false);
+    
+    //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+    // begin
+            
+    var InPrincipioErataVerbum = function(){
+                
+        setUpFromPreferences();
+                
+    }();
+            
+    //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+
+})(); // selfie on the moon!
+
+
+</script>
+</html>
