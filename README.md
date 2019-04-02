@@ -1,2 +1,2 @@
 # clockwizz
-clockwise mousemove event
+clockwise mousem|touch ove event
