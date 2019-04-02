@@ -1,31 +1,140 @@
 <!doctype html>
 <html>
-<head><title>clockWisdom demo</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
-<link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
+<head>
+    <title>clockwizz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
+    <link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
+    <script id="wizzScript" src="clockwizz.js"></script>
 </head>
 <body>
-    
-<div id="holder">
-    <div class="qr">spin your fingr</div>
-    <img
-     id="hackBox"
-     src="hackBox0.svg"
+
+    <div
+     id="holder"
+     class="clockwizz"
+     data-wizzthreshold="5"
+     data-wizzbuffer="5"
+     data-wizz='{
+         "threshold" : 5,
+         "buffer" : 5,
+         "eventName" : "wizzer"
+     }'
     >
-    <div class="qr" 
-    style="
-        font-family:'luckiest guy';
-        text-align:right;
-        bottom:0px;
-        position: absolute;
-        width: 100%
-    ">
-        <i>~queviva</i>
+        <div id="heartDiv">
+            <svg id="heartSVG" transform="scale(0)" style="right:50px;bottom:20px;border:0px solid #fff;" height="200px" width="200px" xmlns="http://www.w3.org/2000/svg">
+                <path class="Xpath" fill="#a20" stroke="rgba(50, 10, 0, 0.95)" stroke-width="10" style="transform-origin:50% 50%" transform="rotate(-35 0 0) translate(30 5)" d="
+M 0 150
+A 500 500 0 0 0 0 50
+A 30 30 0 0 1 100 50
+A 30 30 0 0 1 100 150
+A 500 500 0 0 0 0 150
+Z
+                "/>
+            </svg>
+        </div>
+
+
+        <img id="hackbox" src="hackBox0.svg">
+        
+        <div id="shadow" style="
+            position: absolute;
+            left: 40px;
+            top: 282px;
+            height: 5px;
+            width: 100px;
+            background-color: rgba(70, 30, 0, 0.2);
+            border-radius: 50%;
+        "></div>
+        <div id="queviva"
+         class="qr"
+         style="
+            font-family:'luckiest guy';
+            text-align:right;
+            bottom:0px;
+            position: absolute;
+            width: 100%;
+            user-select: none;
+            color: rgba(56, 11, 0, 1);
+        ">
+            <i>~queviva</i>
+        </div>
+
     </div>
-
-</div>
-
 </body>
-<script id="demoScript" src="demoScript.js"></script>
+<script id="demoScript">
+/*global CustomEvent*/
+
+window.addEventListener('load', e => {
+    
+    const HB = document.getElementById('hackbox');
+    const hold = document.getElementById('holder');
+    const hrt = document.getElementById('heartSVG');
+    const shad = document.getElementById('shadow');
+    const que = document.getElementById('queviva');
+    
+    let 
+        HBcs = window.getComputedStyle(HB),
+        HBw = parseInt(HBcs.width, 10),
+        holdWidth = parseInt(window.getComputedStyle(hold).width, 10),
+        WW = holdWidth + HBw,
+        left = HBw + parseInt(HBcs.left, 10),
+        pulse = 1,
+        xL = WW - 120, yL = -100,
+        xB = left, yB = 200,
+        xS = 0, yS = 280;
+        
+    const woggle = e => {
+        left = (((left + ((e.detail.mag/5) * e.detail.direction * 2)) % WW) + WW) %WW;
+        HB.style.left = -HBw + left +'px';
+        xB = -HBw + left + 60;
+        hrt.setAttributeNS(null,'transform', 'scale('+
+            (0.0 + (3 * ((Math.abs(((left * pulse) % WW) - (WW/2)))/WW)))
+        +')');
+        
+        // calculate the shadow x position
+        let theta1 = -Math.atan2(
+            yB - yL,
+            xB - xL
+        );
+        let mag1 = 80 / Math.sin(theta1);
+        xS = mag1 * Math.cos(theta1);
+        shad.style.left = xB - xS + 'px';
+        
+        // calculate the shadow width
+        let theta2 = -Math.atan2(
+            yB - yL,
+            (xB + 140) - xL
+        );
+        let mag2 = 80 / Math.sin(theta2);
+        let xSS = mag2 * Math.cos(theta2);
+        shad.style.width = 140 - xSS + xS +'px';
+        
+        e.preventDefault();
+    }; 
+    
+    hold.addEventListener('mousewizz', woggle);
+    hold.addEventListener('touchwizz', woggle);
+    
+    woggle(new CustomEvent('mousewizz', {detail:{direction:0, mag:0}}));
+    
+    window.addEventListener('resize', e => {
+        HBcs = window.getComputedStyle(HB);
+        HBw = parseInt(HBcs.width, 10);
+        WW = parseInt(window.getComputedStyle(hold).width, 10) + HBw;
+        left = HBw + parseInt(HBcs.left, 10);
+        woggle(new CustomEvent('wizz', {detail:{direction:0, mag: 0}}));
+    });
+    
+    let toggleListener = 0;
+    que.addEventListener('dblclick', e => {
+        hold[++toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('mousewizz', woggle);
+        hold[toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('touchwizz', woggle);
+    });
+
+});
+
+
+
+
+</script>
 </html>
