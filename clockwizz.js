@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////
 // queviva - clock|anti-clock|wizz-motion detector
 /*
-//  + find by class or default
-//  + send -1 0 1  based on clockmove
+//  = send -1 0 1  based on clockmove
+//  = send magnitude
 //
 //
 */
@@ -21,7 +21,7 @@ window.addEventListener('load', e => {
         this.eventName = eventName;
     };
 
-    // method to blank all the buffer values
+    // method to blank all a buffer's values
     wizzBuffer.prototype.blankAllVals = function() {
 
         this.coords = [];
