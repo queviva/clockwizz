@@ -12,12 +12,8 @@
     <div
      id="holder"
      class="clockwizz"
-     data-wizzthreshold="5"
-     data-wizzbuffer="5"
-     data-wizz='{
-         "threshold" : 5,
-         "buffer" : 5,
-         "eventName" : "wizzer"
+     data-wizzXXX='{
+         "mouseEventName" : "wizzer"
      }'
     >
         <div id="heartDiv">
@@ -112,8 +108,8 @@ window.addEventListener('load', e => {
         e.preventDefault();
     }; 
     
-    hold.addEventListener('mousewizz', woggle);
-    hold.addEventListener('touchwizz', woggle);
+    hold.addEventListener('mousewizz', woggle, { passive: false });
+    hold.addEventListener('touchwizz', woggle, { passive: false });
     
     woggle(new CustomEvent('mousewizz', {detail:{direction:0, mag:0}}));
     

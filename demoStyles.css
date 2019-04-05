@@ -20,6 +20,7 @@ body {
     background-color: var(--back-color);
     font-size: 22px;
     text-align: justify;
+    overflow: hidden;
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
     -epub-hyphens: auto;

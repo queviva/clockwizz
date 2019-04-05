@@ -47,13 +47,12 @@ window.addEventListener('load', e => {
 
         // the default prefs
         this.prefs = {
-            eventName: 'wizz',
             mouseEventName: 'mousewizz',
             touchEventName: 'touchwizz'
         };
 
         // try to get any prefs set in the tag
-        let wizzPrefs = JSON.parse(obj.dataset.wizz) || {};
+        let wizzPrefs = obj.dataset.wizz ? JSON.parse(obj.dataset.wizz) : {};
 
         // if any valid prefs given, set them
         for (let i in wizzPrefs) {
@@ -62,13 +61,14 @@ window.addEventListener('load', e => {
             }
         }
 
-        // the threshold angle default
+        // the default threshold angles in degrees
         this.threshold = { min: 2, max: 90 };
 
         // create both mouse and touch buffers
         this.mouseBuff = new wizzBuffer(this.prefs.mouseEventName);
         this.touchBuff = new wizzBuffer(this.prefs.touchEventName);
 
+        // blank the buffers on start
         this.mouseBuff.blankAllVals();
         this.touchBuff.blankAllVals();
 
