@@ -123,8 +123,8 @@ window.addEventListener('load', e => {
     
     let toggleListener = 0;
     que.addEventListener('dblclick', e => {
-        hold[++toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('mousewizz', woggle);
-        hold[toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('touchwizz', woggle);
+        hold[++toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('mousewizz', woggle, { passive: false });
+        hold[toggleListener % 2 === 1 ? 'removeEventListener' : 'addEventListener']('touchwizz', woggle, { passive: false });
     });
 
 });
