@@ -106,6 +106,8 @@ window.addEventListener('load', e => {
         shad.style.width = 140 - xSS + xS +'px';
         
         e.preventDefault();
+        e.stopPropagation();
+        
     }; 
     
     hold.addEventListener('mousewizz', woggle, { passive: false });
