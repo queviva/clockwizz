@@ -270,7 +270,6 @@ window.addEventListener('load', e => {
 
     };
 
-
     // loop through all wizzer objects 
     document.querySelectorAll('.clockwizz').forEach((obj, i) => {
 
