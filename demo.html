@@ -31,12 +31,16 @@ function wizzHandler (e) {
     hhh = ((((hhh + (3 * e.detail.direction)) % 360 ) + 360 ) % 360 );
     areaX.innerHTML = hhh;
     areaX.style.backgroundColor = 'hsla(' + hhh + ',100%,50%,1.0)';
-    e.preventDefault();
-    e.stopPropagation();
+    //e.preventDefault();
+    //e.stopPropagation();
 }
 
 areaX.addEventListener('mousewizz', wizzHandler, { passive: false });
 areaX.addEventListener('touchwizz', wizzHandler, { passive: false });
+
+window.addEventListener('mousemove', e => {
+	console.log(e);
+});
 
 </script>
 </html>

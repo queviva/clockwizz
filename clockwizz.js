@@ -148,7 +148,7 @@ window.addEventListener('load', e => {
 
                 )
 
-                // and 
+                // and
                 &&
 
                 // none of the absDeltas is zero
@@ -160,10 +160,10 @@ window.addEventListener('load', e => {
                 // all of the absDeltas exceeds the min
                 absDeltas.every(v => v > this.threshold.min)
 
-                // and 
+                // and
                 &&
 
-                // none of the absDeltas exceeds the max 
+                // none of the absDeltas exceeds the max
                 absDeltas.every(v => v < this.threshold.max)
 
             ) {
@@ -187,6 +187,10 @@ window.addEventListener('load', e => {
                     )
                 }
             }));
+            
+            
+            e.preventDefault();
+            e.stopPropagation();
 
         };
 
@@ -197,7 +201,7 @@ window.addEventListener('load', e => {
             obj.removeEventListener('touchstart', this.touchInit);
 
             // add the touch version of the wizzHandler
-            obj.addEventListener('touchmove', this.touchWizz, { passive: true });
+            obj.addEventListener('touchmove', this.touchWizz, { passive: false});
 
             // add the touch stop listener
             obj.addEventListener('touchend', this.touchEnd);
@@ -228,7 +232,7 @@ window.addEventListener('load', e => {
             obj.removeEventListener('mouseenter', this.mouseInit);
 
             // add the mouse version of the wizzHandler
-            obj.addEventListener('mousemove', this.mouseWizz, { passive: true });
+            obj.addEventListener('mousemove', this.mouseWizz, { passive: false});
 
             // add the mouse stop listener
             obj.addEventListener('mouseleave', this.mouseEnd);
@@ -270,7 +274,7 @@ window.addEventListener('load', e => {
 
     };
 
-    // loop through all wizzer objects 
+    // loop through all wizzer objects
     document.querySelectorAll('.clockwizz').forEach((obj, i) => {
 
         // make them all into clock wizzers
