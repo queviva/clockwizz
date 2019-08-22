@@ -201,8 +201,8 @@ window.addEventListener('load', e => {
             obj.removeEventListener('touchstart', this.touchInit);
 
             // add the touch version of the wizzHandler
-            //obj.addEventListener('touchmove', this.touchWizz, { passive: false});
-            obj.addEventListener('pointermove', this.mouseWizz, { passive: false});
+            obj.addEventListener('touchmove', this.touchWizz, { passive: false});
+            //obj.addEventListener('pointermove', this.mouseWizz, { passive: false});
 
             // add the touch stop listener
             obj.addEventListener('touchend', this.touchEnd);
@@ -216,8 +216,8 @@ window.addEventListener('load', e => {
             obj.removeEventListener('touchend', this.touchEnd);
 
             // remove the touch move handler
-            //obj.removeEventListener('touchmove', this.touchWizz);
-            obj.removeEventListener('pointermove', this.mouseWizz);
+            obj.removeEventListener('touchmove', this.touchWizz);
+            //obj.removeEventListener('pointermove', this.mouseWizz);
 
             // add the touch start listener back
             obj.addEventListener('touchstart', this.touchInit);
