@@ -28,8 +28,8 @@ body {
 }
 
 #holder {
-	position: relative;
-	background-color: var(--holder-back);
+    position: relative;
+    background-color: var(--holder-back);
     margin: auto;
     width: 90%;
     max-width: 700px;
