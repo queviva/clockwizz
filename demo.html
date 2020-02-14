@@ -1,17 +1,24 @@
 <!doctype html>
 <html>
 <head>
-<script id="wizzScript" src="clockwizz.js"></script>
+<script id="wizzScript" src="clockwizz.js"
+ data-wizz='{
+    "rat" : "master",
+    "selector" : ".samp"
+ }'
+></script>
 <style>
-
+.samp {
+    margin-bottom: 20px;
+}
 </style>
 </head>
 <body>
 <center>
     <br>
 <div
- id="areaX"
- class="clockwizz"
+ id="samp0"
+ class="samp"
  style="
   height: 300px;
   width: 600px;
@@ -19,25 +26,46 @@
   background-color: hsla(40, 100%, 50%, 1.0);
  "
 ></div>
+<div
+ id="samp1"
+ class="samp"
+ style="
+  height: 300px;
+  width: 600px;
+  font-size: 90px;
+  background-color: hsla(40, 100%, 50%, 1.0);
+ "
+ data-wizz='{
+  "touchEventName" : "ratTouchEvent",
+  "mouseEventName" : "ratMouseEvt"
+ }'
+></div>
 </center>
 </body>
-<script>
+<script id="demoScript" data-set="ass">
 
-const areaX = document.getElementById('areaX');
+window.addEventListener('load', e => {
 
-var hhh = 40;
+    function wizzHandler(e, wizzer) {
+        wizzer.obj.hhh = ((((wizzer.obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
+        wizzer.obj.innerHTML = wizzer.obj.hhh;
+        wizzer.obj.style.backgroundColor = 'hsla(' + wizzer.obj.hhh + ',100%,50%,1.0)';
+    }
 
-function wizzHandler (e) {
-    hhh = ((((hhh + (3 * e.detail.direction)) % 360 ) + 360 ) % 360 );
-    areaX.innerHTML = hhh;
-    areaX.style.backgroundColor = 'hsla(' + hhh + ',100%,50%,1.0)';
-}
+    const CW = new ClockWizzer();
 
-areaX.addEventListener('mousewizz', wizzHandler, { passive: false });
-areaX.addEventListener('touchwizz', wizzHandler, { passive: false });
-
-window.addEventListener('mousemove', e => {
-	console.log(e);
+    for (let wizzer in CW) {
+    
+        let z = CW[wizzer].obj;
+        
+        z.hhh = 40;
+    
+        z.addEventListener(CW[wizzer].prefs.touchEventName, e => wizzHandler(e, CW[wizzer]), { passive: false });
+    
+        z.addEventListener(CW[wizzer].prefs.mouseEventName, e => wizzHandler(e, CW[wizzer]), { passive: false });
+        
+    }
+    
 });
 
 </script>

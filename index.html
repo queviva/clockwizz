@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
     <link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
-    <script id="wizzScript" src="clockwizz.js"></script>
+    <style>
+        clockwizz {
+            user-select: none;
+        }
+    </style>
+    <script id="wizzScript" src="clockwizz.js"
+     data-wizz='{
+        "touchEventName" : "touchwizz",
+        "mouseEventName" : "mousewizz"
+     }'
+    ></script>
 </head>
 <body>
 
@@ -67,8 +77,9 @@ window.addEventListener('load', e => {
     const hrt = document.getElementById('heartSVG');
     const shad = document.getElementById('shadow');
     const que = document.getElementById('queviva');
+    const CW = new ClockWizzer();
     
-    let 
+    let
         HBcs = window.getComputedStyle(HB),
         HBw = parseInt(HBcs.width, 10),
         holdWidth = parseInt(window.getComputedStyle(hold).width, 10),
@@ -108,7 +119,7 @@ window.addEventListener('load', e => {
         e.preventDefault();
         e.stopPropagation();
         
-    }; 
+    };
     
     hold.addEventListener('mousewizz', woggle, { passive: false });
     hold.addEventListener('touchwizz', woggle, { passive: false });

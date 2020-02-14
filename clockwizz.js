@@ -6,23 +6,41 @@
 //
 //
 */
-/*global CustomEvent*/
+/*global CustomEvent*/// for c9 editing
 //////////////////////////////////////////////////
 
 
-// window load closure
-window.addEventListener('load', e => {
+
+// the object closure for holding all clockwizz objs in the page
+const ClockWizzer = function () {
+
+    let opts =
+        document.querySelector('script[id="wizzScript"]') &&
+        document.querySelector('script[id="wizzScript"]').dataset ?
+        document.querySelector('script[id="wizzScript"]').dataset :
+        {};
+    
+    opts = opts.wizz ? JSON.parse(opts.wizz) : {};
+    
+    // the default prefs for all WizzerObjs themselves
+    const defPrefs = {
+        mouseEventName : 'mousewizz',
+        touchEventName : 'touchwizz'
+        ,hack : this
+    };
+    
+    console.log(defPrefs.hack);
 
     // an object for holding buffer values
-    const wizzBuffer = function(eventName) {
+    const WizzBuffer = function(eventName) {
         this.coords = [];
         this.atans = [];
         this.deltas = [];
         this.eventName = eventName;
     };
 
-    // method to blank all a buffer's values
-    wizzBuffer.prototype.blankAllVals = function() {
+    // method to blank all values in a buffer
+    WizzBuffer.prototype.blankAllVals = function() {
 
         this.coords = [];
         this.atans = [];
@@ -43,30 +61,29 @@ window.addEventListener('load', e => {
 
     };
 
-    const ClockWizzer = function(obj) {
+    // the wizzer object itself
+    const WizzerObj = function(obj) {
 
-        // the default prefs
-        this.prefs = {
-            mouseEventName: 'mousewizz',
-            touchEventName: 'touchwizz'
-        };
+        // the prefs holder for this specific wizzer
+        this.prefs = {};
 
-        // try to get any prefs set in the tag
-        let wizzPrefs = obj.dataset.wizz ? JSON.parse(obj.dataset.wizz) : {};
+        // get any prefs set in individual tag data-wizz param
+        let dataPrefs = obj.dataset.wizz ? JSON.parse(obj.dataset.wizz) : {};
 
-        // if any valid prefs given, set them
-        for (let i in wizzPrefs) {
-            if (this.prefs[i]) {
-                this.prefs[i] = wizzPrefs[i];
-            }
+        // if any valid prefs were given, set them
+        for (let p in defPrefs) {
+            this.prefs[p] = dataPrefs[p] ? dataPrefs[p] : defPrefs[p];
         }
-
+        
+        // reference to the html element
+        this.obj = obj;
+        
         // the default threshold angles in degrees
         this.threshold = { min: 2, max: 90 };
 
         // create both mouse and touch buffers
-        this.mouseBuff = new wizzBuffer(this.prefs.mouseEventName);
-        this.touchBuff = new wizzBuffer(this.prefs.touchEventName);
+        this.mouseBuff = new WizzBuffer(this.prefs.mouseEventName);
+        this.touchBuff = new WizzBuffer(this.prefs.touchEventName);
 
         // blank the buffers on start
         this.mouseBuff.blankAllVals();
@@ -202,8 +219,7 @@ window.addEventListener('load', e => {
 
             // add the touch version of the wizzHandler
             obj.addEventListener('touchmove', this.touchWizz, { passive: false});
-            //obj.addEventListener('pointermove', this.mouseWizz, { passive: false});
-
+            
             // add the touch stop listener
             obj.addEventListener('touchend', this.touchEnd);
 
@@ -217,7 +233,6 @@ window.addEventListener('load', e => {
 
             // remove the touch move handler
             obj.removeEventListener('touchmove', this.touchWizz);
-            //obj.removeEventListener('pointermove', this.mouseWizz);
 
             // add the touch start listener back
             obj.addEventListener('touchstart', this.touchInit);
@@ -231,27 +246,29 @@ window.addEventListener('load', e => {
         this.mouseInit = e => {
 
             // remove this very listener from the obj
-            obj.removeEventListener('mouseenter', this.mouseInit);
+            obj.removeEventListener('mousedown', this.mouseInit);
 
             // add the mouse version of the wizzHandler
-            obj.addEventListener('pointermove', this.mouseWizz, { passive: false});
+            //obj.addEventListener('pointermove', this.mouseWizz, { passive: false});
+            window.addEventListener('pointermove', this.mouseWizz, { passive: false});
 
             // add the mouse stop listener
-            obj.addEventListener('mouseleave', this.mouseEnd);
+            //obj.addEventListener('mouseleave', this.mouseEnd);
+            window.addEventListener('mouseup', this.mouseEnd);
 
         };
 
-        // what to do when the mouse leaves
+        // what to do when the mouse goes up
         this.mouseEnd = e => {
 
             // remove this very listener
-            obj.removeEventListener('mouseleave', this.mouseEnd);
+            window.removeEventListener('mouseup', this.mouseEnd);
 
             // remove the mouse move handler
-            obj.removeEventListener('pointermove', this.mouseWizz);
+            window.removeEventListener('pointermove', this.mouseWizz);
 
             // add the mouse init listener back
-            obj.addEventListener('mouseenter', this.mouseInit);
+            obj.addEventListener('mousedown', this.mouseInit);
 
             // reset everything to zero
             this.mouseBuff.blankAllVals();
@@ -272,16 +289,45 @@ window.addEventListener('load', e => {
         obj.addEventListener('touchstart', this.touchInit);
 
         // also begin with mouse start listener on
-        obj.addEventListener('mouseenter', this.mouseInit);
+        obj.addEventListener('mousedown', this.mouseInit);
 
     };
+    
+    // over-rite default prefs with options from script's data-wizz param
+    for (let p in opts) {
+        
+        // ... IF they exist in the default preferences
+        if (defPrefs[p] !== undefined) defPrefs[p] = opts[p];
+    }
+    
+    // get all of the elements that ...
+    document.querySelectorAll(
+        
+        // match the specified css-selector string ...
+        opts.selector
+        
+        // OR just use the default css-selector string
+        || '.clockwizz'
+        
+    )
+    
+    
+    // .then loop through all of those objects
+    .forEach(obj => {
 
-    // loop through all wizzer objects
-    document.querySelectorAll('.clockwizz').forEach((obj, i) => {
-
-        // make them all into clock wizzers
-        new ClockWizzer(obj);
+        // debugg
+        console.log('creating',obj.id);
+        
+        // making each one into clock wizzers
+        this[obj.id] = new WizzerObj(obj);
 
     });
 
+};
+
+/*
+window.addEventListener('load', e => {
+    ClockWizzer.prototype.curScript = document.currentScript;
 });
+//*/
+    
