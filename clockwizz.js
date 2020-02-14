@@ -14,7 +14,7 @@
 // the object closure for holding all clockwizz objs in the page
 const ClockWizzer = function () {
 
-    let opts =
+    let opts = // can NOT use document.currentScript
         document.querySelector('script[id="wizzScript"]') &&
         document.querySelector('script[id="wizzScript"]').dataset ?
         document.querySelector('script[id="wizzScript"]').dataset :
@@ -26,11 +26,8 @@ const ClockWizzer = function () {
     const defPrefs = {
         mouseEventName : 'mousewizz',
         touchEventName : 'touchwizz'
-        ,hack : this
     };
     
-    console.log(defPrefs.hack);
-
     // an object for holding buffer values
     const WizzBuffer = function(eventName) {
         this.coords = [];
@@ -315,9 +312,6 @@ const ClockWizzer = function () {
     // .then loop through all of those objects
     .forEach(obj => {
 
-        // debugg
-        console.log('creating',obj.id);
-        
         // making each one into clock wizzers
         this[obj.id] = new WizzerObj(obj);
 
