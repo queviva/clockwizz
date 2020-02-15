@@ -35,7 +35,7 @@
   font-size: 90px;
   background-color: hsla(40, 100%, 50%, 1.0);
  "
- data-wizz='{
+ xxxdata-wizz='{
   "touchEventName" : "ratTouchEvent",
   "mouseEventName" : "ratMouseEvt"
  }'
@@ -46,25 +46,20 @@
 
 window.addEventListener('load', e => {
 
-    function wizzHandler(e, wizzer) {
-        wizzer.obj.hhh = ((((wizzer.obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
-        wizzer.obj.innerHTML = wizzer.obj.hhh;
-        wizzer.obj.style.backgroundColor = 'hsla(' + wizzer.obj.hhh + ',100%,50%,1.0)';
+    function wizzHandler(e, obj) {
+        obj.hhh = ((((obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
+        obj.innerHTML = obj.hhh;
+        obj.style.backgroundColor = 'hsla(' + obj.hhh + ',100%,50%,1.0)';
     }
-
-    const CW = new ClockWizzer();
-
-    for (let wizzer in CW) {
     
-        let z = CW[wizzer].obj;
+    document.querySelectorAll('.samp').forEach(wizz => {
         
-        z.hhh = 40;
+        wizz.hhh = 40;
+        wizz.addEventListener('touchwizz', e => wizzHandler(e, wizz), { passive: false });
+        wizz.addEventListener('mousewizz', e => wizzHandler(e, wizz), { passive: false });
     
-        z.addEventListener(CW[wizzer].prefs.touchEventName, e => wizzHandler(e, CW[wizzer]), { passive: false });
-    
-        z.addEventListener(CW[wizzer].prefs.mouseEventName, e => wizzHandler(e, CW[wizzer]), { passive: false });
         
-    }
+    });
     
 });
 

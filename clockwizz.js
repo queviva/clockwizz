@@ -1,19 +1,15 @@
 //////////////////////////////////////////////////
 // queviva - clock|anti-clock|wizz-motion detector
-/*
+//
 //  = send -1 0 1  based on clockmove
 //  = send magnitude
 //
-//
-*/
 /*global CustomEvent*/// for c9 editing
 //////////////////////////////////////////////////
 
-
-
-// the object closure for holding all clockwizz objs in the page
-const ClockWizzer = function () {
-
+// window load closure for all clockwizz objs in the page
+window.addEventListener('load', e => {
+    
     let opts = // can NOT use document.currentScript
         document.querySelector('script[id="wizzScript"]') &&
         document.querySelector('script[id="wizzScript"]').dataset ?
@@ -311,17 +307,11 @@ const ClockWizzer = function () {
     
     // .then loop through all of those objects
     .forEach(obj => {
-
+    
         // making each one into clock wizzers
-        this[obj.id] = new WizzerObj(obj);
+        //this[obj.id] = new WizzerObj(obj);
+        new WizzerObj(obj);
 
     });
 
-};
-
-/*
-window.addEventListener('load', e => {
-    ClockWizzer.prototype.curScript = document.currentScript;
 });
-//*/
-    
