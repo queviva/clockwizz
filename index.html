@@ -77,7 +77,6 @@ window.addEventListener('load', e => {
     const hrt = document.getElementById('heartSVG');
     const shad = document.getElementById('shadow');
     const que = document.getElementById('queviva');
-    const CW = new ClockWizzer();
     
     let
         HBcs = window.getComputedStyle(HB),
@@ -91,7 +90,7 @@ window.addEventListener('load', e => {
         xS = 0, yS = 280;
         
     const woggle = e => {
-        left = (((left + ((e.detail.mag/5) * e.detail.direction * 2)) % WW) + WW) %WW;
+        left = (((left + ((e.detail.mag/5) * e.detail.direction * 2)) % WW) + WW) % WW;
         HB.style.left = -HBw + left +'px';
         xB = -HBw + left + 60;
         hrt.setAttributeNS(null,'transform', 'scale('+
