@@ -7,20 +7,18 @@
 //////////////////////////////////////////////////
 
 // window load closure for all clockwizz objs in the page
-window.addEventListener('load', e => new (function(){
+window.addEventListener('load', () => {
 
-    // get any options from the html script tag
-    let opts = JSON.parse(((
-        document.querySelector('script[src="clockwizz.js"]') || {}
-    ).dataset || {}).wizz || '{}');
+    const opts = JSON.parse(((document.querySelector('script[src="clockwizz.js"]') || {}).dataset || {}).wizz || '{}');
 
     // the default prefs for all WizzerObjs themselves
     const defPrefs = {
+        selector: '.clockwizz',
         mouseEventName: 'mousewizz',
         touchEventName: 'touchwizz'
     };
 
-    // over-rite default prefs with options from script's data-wizz param
+    // over-rite default prefs with opts from script's data-wizz param
     for (let p in opts) {
 
         // ... IF they exist in the default preferences
@@ -57,11 +55,204 @@ window.addEventListener('load', e => new (function(){
         this.deltas.pop();
 
     };
-    
- 
-    // the wizzer object itself
-    const WizzerObj = function(obj) {
-        
+
+    // method for calculating the wizz
+    const wizzHandler = (e, clock, xVal, yVal, buff) => {
+
+        // chop the first coord off
+        buff.coords.shift();
+
+        // put the new coord on the end
+        buff.coords.push({ x: xVal, y: yVal });
+
+        // calc the atans
+        for (let i = 1, j = buff.coords.length; i < j; i++) {
+
+            // get the angle between ...
+            buff.atans[i - 1] = (Math.atan2(
+
+                // the first coord in the list
+                // and every other coord
+                buff.coords[i].y - buff.coords[0].y,
+                buff.coords[i].x - buff.coords[0].x
+
+                // convert to degrees
+            ) * (180 / Math.PI));
+
+        }
+
+        // compute the deltas between the angles
+        for (let i = 1, j = buff.atans.length; i < j; i++) {
+
+            let tmp = buff.atans[i] - buff.atans[i - 1];
+
+            // adjust for 360
+            tmp =
+                tmp > 180 ? tmp - 360 :
+                tmp < -180 ? tmp + 360 :
+                tmp;
+
+            buff.deltas[i - 1] = tmp;
+
+        }
+
+        // default the direction to no-turn
+        let dir = 0;
+
+        // get magnitudes of all deltas
+        let absDeltas = buff.deltas.map((v, i) =>
+
+            // zero out all the extremes
+            Math.abs(v) > clock.threshold.max ||
+            Math.abs(v) < clock.threshold.min ?
+            0.000069 : Math.abs(v)
+
+        );
+
+
+        // get the maxDelta
+        let maxDelta = Math.max(...absDeltas);
+
+        // get the sign of the final delta and ...
+        let sgnFinalDelta = Math.sign(buff.deltas[buff.deltas.length - 1]);
+
+        // if ...
+        if (
+
+            // the final delta is not zero
+            sgnFinalDelta !== 0
+
+            // and ...
+            &&
+
+            // all the deltas ...
+            buff.deltas.every(v =>
+
+                // have the same sign as the final ...
+                Math.sign(v) === sgnFinalDelta
+
+            )
+
+            // and
+            &&
+
+            // none of the absDeltas is zero
+            absDeltas.every(v => v !== 0)
+
+            // and
+            &&
+
+            // all of the absDeltas exceeds the min
+            absDeltas.every(v => v > clock.threshold.min)
+
+            // and
+            &&
+
+            // none of the absDeltas exceeds the max
+            absDeltas.every(v => v < clock.threshold.max)
+
+        ) {
+
+            // then set the dir to that
+            dir = sgnFinalDelta;
+
+        }
+
+        // dispatch the wizz
+        clock.obj.dispatchEvent(new CustomEvent(buff.eventName, {
+            detail: {
+                direction: dir,
+                mag: Math.max(
+                    Math.abs(
+                        buff.coords[0].x - buff.coords[buff.coords.length - 1].x
+                    ),
+                    Math.abs(
+                        buff.coords[0].y - buff.coords[buff.coords.length - 1].y
+                    )
+                )
+            }
+        }));
+
+        e.preventDefault();
+        e.stopPropagation();
+
+    };
+
+    // method to pass touch coords to the wizzHandler
+    const touchWizz = (e, clock) => {
+        wizzHandler(e, clock, e.touches[0].pageX, e.touches[0].pageY, clock.touchBuff);
+    };
+
+    // touch initializer
+    const touchInit = (e, clock) => {
+
+        // remove the very listener
+        clock.obj.removeEventListener('touchstart', clock.touchInit);
+
+        // add the touch version of the wizzHandler
+        clock.obj.addEventListener('touchmove', clock.touchWizz, { passive: false });
+
+        // add the touch stop listener
+        clock.obj.addEventListener('touchend', clock.touchEnd);
+
+    };
+
+    // remover|resetter on touch end
+    const touchEnd = (e, clock) => {
+
+        // remove the very listener
+        clock.obj.removeEventListener('touchend', clock.touchEnd);
+
+        // remove the touch move handler
+        clock.obj.removeEventListener('touchmove', clock.touchWizz);
+
+        // re-add the touch initialization listener
+        clock.obj.addEventListener('touchstart', clock.touchInit);
+
+        // reset everything to zero
+        clock.touchBuff.blankAllVals();
+
+    };
+
+    // for dealing with the first mouse instance
+    const mouseInit = (e, clock) => {
+
+        // remove clock very listener from the obj
+        clock.obj.removeEventListener('mousedown', clock.mouseInit);
+
+        // add the mouse version of the wizzHandler
+        window.addEventListener('pointermove', clock.mouseWizz, { passive: false });
+
+        // add the mouse stop listener
+        window.addEventListener('mouseup', clock.mouseEnd);
+
+    };
+
+    // what to do when the mouse goes up
+    const mouseEnd = (e, clock) => {
+
+        // remove clock very listener
+        window.removeEventListener('mouseup', clock.mouseEnd);
+
+        // remove the mouse move handler
+        window.removeEventListener('pointermove', clock.mouseWizz);
+
+        // add the mouse init listener back
+        clock.obj.addEventListener('mousedown', clock.mouseInit);
+
+        // reset everything to zero
+        clock.mouseBuff.blankAllVals();
+
+    };
+
+    // method to pass mouse coords to the wizzHandler
+    const mouseWizz = (e, clock) => {
+        wizzHandler(e, clock, e.pageX, e.pageY, clock.mouseBuff);
+    };
+
+    // the object for each wizzer on the page
+    const Wizzer = function(obj) {
+
         // the prefs holder for this specific wizzer
         this.prefs = {};
 
@@ -72,224 +263,37 @@ window.addEventListener('load', e => new (function(){
         for (let p in defPrefs) {
             this.prefs[p] = dataPrefs[p] ? dataPrefs[p] : defPrefs[p];
         }
-
+        
         this.obj = obj;
 
         // the default threshold angles in degrees
         this.threshold = { min: 2, max: 90 };
 
         // create both mouse and touch buffers
-        this.mouseBuff = new WizzBuffer(this.prefs.mouseEventName);
         this.touchBuff = new WizzBuffer(this.prefs.touchEventName);
+        this.mouseBuff = new WizzBuffer(this.prefs.mouseEventName);
 
         // blank the buffers on start
-        this.mouseBuff.blankAllVals();
         this.touchBuff.blankAllVals();
+        this.mouseBuff.blankAllVals();
 
-        // method for calculating the wizz
-        this.wizzHandler = (e, xVal, yVal, buff) => {
+        this.touchWizz = e => touchWizz(e, this);
+        this.touchInit = e => touchInit(e, this);
+        this.touchEnd = e => touchEnd(e, this);
+        this.mouseWizz = e => mouseWizz(e, this);
+        this.mouseInit = e => mouseInit(e, this);
+        this.mouseEnd = e => mouseEnd(e, this);
 
-            // chop the first coord off
-            buff.coords.shift();
-
-            // put the new coord on the end
-            buff.coords.push({ x: xVal, y: yVal });
-
-            // calc the atans
-            for (let i = 1, j = buff.coords.length; i < j; i++) {
-
-                // get the angle between ...
-                buff.atans[i - 1] = (Math.atan2(
-
-                    // the first coord in the list
-                    // and every other coord
-                    buff.coords[i].y - buff.coords[0].y,
-                    buff.coords[i].x - buff.coords[0].x
-
-                    // convert to degrees
-                ) * (180 / Math.PI));
-
-            }
-
-            // compute the deltas between the angles
-            for (let i = 1, j = buff.atans.length; i < j; i++) {
-
-                let tmp = buff.atans[i] - buff.atans[i - 1];
-
-                // adjust for 360
-                tmp =
-                    tmp > 180 ? tmp - 360 :
-                    tmp < -180 ? tmp + 360 :
-                    tmp;
-
-                buff.deltas[i - 1] = tmp;
-            }
-
-            // default the direction to no-turn
-            let dir = 0;
-
-            // get magnitudes of all deltas
-            let absDeltas = buff.deltas.map((v, i) =>
-
-                // zero out all the extremes
-                Math.abs(v) > this.threshold.max ||
-                Math.abs(v) < this.threshold.min ?
-                0.000069 : Math.abs(v)
-
-            );
-
-
-            // get the maxDelta
-            let maxDelta = Math.max(...absDeltas);
-
-            // get the sign of the final delta and ...
-            let sgnFinalDelta = Math.sign(buff.deltas[buff.deltas.length - 1]);
-
-            // if ...
-            if (
-
-                // the final delta is not zero
-                sgnFinalDelta !== 0
-
-                // and ...
-                &&
-
-                // all the deltas ...
-                buff.deltas.every(v =>
-
-                    // have the same sign as the final ...
-                    Math.sign(v) === sgnFinalDelta
-
-                )
-
-                // and
-                &&
-
-                // none of the absDeltas is zero
-                absDeltas.every(v => v !== 0)
-
-                // and
-                &&
-
-                // all of the absDeltas exceeds the min
-                absDeltas.every(v => v > this.threshold.min)
-
-                // and
-                &&
-
-                // none of the absDeltas exceeds the max
-                absDeltas.every(v => v < this.threshold.max)
-
-            ) {
-
-                // then set the dir to that
-                dir = sgnFinalDelta;
-
-            }
-
-            // dispatch the wizz
-            this.obj.dispatchEvent(new CustomEvent(buff.eventName, {
-                detail: {
-                    direction: dir,
-                    mag: Math.max(
-                        Math.abs(
-                            buff.coords[0].x - buff.coords[buff.coords.length - 1].x
-                        ),
-                        Math.abs(
-                            buff.coords[0].y - buff.coords[buff.coords.length - 1].y
-                        )
-                    )
-                }
-            }));
-
-
-            e.preventDefault();
-            e.stopPropagation();
-
-        };
-        
-        this.touchInit = e => {
-        
-            // remove this very listener from the obj
-            this.obj.removeEventListener('touchstart', this.touchInit);
-        
-            // add the touch version of the wizzHandler
-            this.obj.addEventListener('touchmove', this.touchWizz, { passive: false });
-        
-            // add the touch stop listener
-            this.obj.addEventListener('touchend', this.touchEnd);
-        
-        };
-
-        this.touchEnd = e => {
-        
-            // remove this very listener
-            this.obj.removeEventListener('touchend', this.touchEnd);
-        
-            // remove the touch move handler
-            this.obj.removeEventListener('touchmove', this.touchWizz);
-        
-            // add the touch start listener back
-            this.obj.addEventListener('touchstart', this.touchInit);
-        
-            // reset everything to zero
-            this.touchBuff.blankAllVals();
-        
-        };
-    
-        // method to pass touch coords to the wizzHandler
-        this.touchWizz = e => {
-            this.wizzHandler(e, e.touches[0].pageX, e.touches[0].pageY, this.touchBuff);
-        };
-
-        // for dealing with the first mouse instance
-        this.mouseInit = e => {
-
-            // remove this very listener from the obj
-            obj.removeEventListener('mousedown', this.mouseInit);
-
-            // add the mouse version of the wizzHandler
-            window.addEventListener('pointermove', this.mouseWizz, { passive: false });
-
-            // add the mouse stop listener
-            window.addEventListener('mouseup', this.mouseEnd);
-
-        };
-
-        // what to do when the mouse goes up
-        this.mouseEnd = e => {
-
-            // remove this very listener
-            window.removeEventListener('mouseup', this.mouseEnd);
-
-            // remove the mouse move handler
-            window.removeEventListener('pointermove', this.mouseWizz);
-
-            // add the mouse init listener back
-            obj.addEventListener('mousedown', this.mouseInit);
-
-            // reset everything to zero
-            this.mouseBuff.blankAllVals();
-
-        };
-
-        // method to pass mouse coords to the wizzHandler
-        this.mouseWizz = e => {
-            this.wizzHandler(e, e.pageX, e.pageY, this.mouseBuff);
-        };
-
-        // begin with the touch start listener eastbound and down
         this.obj.addEventListener('touchstart', this.touchInit);
-
-        // also begin with mouse start listener on and bound
         this.obj.addEventListener('mousedown', this.mouseInit);
 
     };
 
-    // get all elements that match the css-selector, otherwizz use default
-    document.querySelectorAll(opts.selector || '.clockwizz')
+    // loop through all the specified objects
+    document.querySelectorAll(defPrefs.selector).forEach(obj => {
 
-        // loop through all those objects making each one into clock wizzers
-        .forEach(obj => this[obj.id] = new WizzerObj(obj));
+        this[obj.id] = new Wizzer(obj);
 
-})());
+    });
+
+});

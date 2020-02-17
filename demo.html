@@ -3,12 +3,16 @@
 <head>
 <script src="clockwizz.js"
  data-wizz='{
-    "selector" : ".samp"
+    "selector" : ".samp",
+    "touchEventName" : "samptouch"
  }'
 ></script>
 <style>
 .samp {
     margin-bottom: 20px;
+    user-select: none;
+    color: #fff;
+    border-radius: 0px 50px 0px 50px;
 }
 </style>
 </head>
@@ -22,7 +26,7 @@
   height: 300px;
   width: 600px;
   font-size: 90px;
-  background-color: hsla(40, 100%, 50%, 1.0);
+  background-color: hsla(20, 100%, 40%, 1.0);
  "
 ></div>
 <div
@@ -32,32 +36,41 @@
   height: 300px;
   width: 600px;
   font-size: 90px;
-  background-color: hsla(40, 100%, 50%, 1.0);
+  background-color: hsla(40, 100%, 40%, 1.0);
  "
  xxxdata-wizz='{
   "touchEventName" : "ratTouchEvent",
   "mouseEventName" : "ratMouseEvt"
  }'
 ></div>
+<div
+ id="samp2"
+ class="samp"
+ style="
+  height: 300px;
+  width: 600px;
+  font-size: 90px;
+  background-color: hsla(60, 100%, 40%, 1.0);
+ "
+></div>
 </center>
 </body>
-<script id="demoScript" data-set="ass">
+<script id="demoScript">
 
 window.addEventListener('load', e => {
 
-    function wizzHandler(e, obj) {
+    function sampHandler(e, obj) {
         obj.hhh = ((((obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
         obj.innerHTML = obj.hhh;
-        obj.style.backgroundColor = 'hsla(' + obj.hhh + ',100%,50%,1.0)';
+        obj.style.backgroundColor = 'hsla(' + obj.hhh + ',100%,40%,1.0)';
     }
     
-    document.querySelectorAll('.samp').forEach(wizz => {
+    document.querySelectorAll('.samp').forEach((samp, i) => {
         
-        wizz.hhh = 40;
-        wizz.addEventListener('touchwizz', e => wizzHandler(e, wizz), { passive: false });
-        wizz.addEventListener('mousewizz', e => wizzHandler(e, wizz), { passive: false });
+        samp.hhh = 20 * (i + 1);
+        samp.addEventListener('samptouch', e => sampHandler(e, samp), { passive: false });
+        samp.addEventListener('mousewizz', e => sampHandler(e, samp), { passive: false });
     
-        
     });
     
 });
