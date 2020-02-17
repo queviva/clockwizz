@@ -9,7 +9,9 @@
 // window load closure for all clockwizz objs in the page
 window.addEventListener('load', () => {
 
-    const opts = JSON.parse(((document.querySelector('script[src="clockwizz.js"]') || {}).dataset || {}).wizz || '{}');
+    const opts = JSON.parse(((document.querySelector(
+        'script[src*="clockwizz"][src$=".js"]'
+        ) || {}).dataset || {}).wizz || '{}');
 
     // the default prefs for all WizzerObjs themselves
     const defPrefs = {
