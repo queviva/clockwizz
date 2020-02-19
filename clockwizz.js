@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////
 
 // window load closure for all clockwizz objs in the page
-window.addEventListener('load', () => {
+window.addEventListener('load', () => { new (function () {
 
     const opts = JSON.parse(((document.querySelector(
         'script[src*="clockwizz"][src$=".js"]'
@@ -298,4 +298,4 @@ window.addEventListener('load', () => {
 
     });
 
-});
+})()});
