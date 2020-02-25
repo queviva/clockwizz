@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
 <head>
-<script src="clockwizz.js"
+<script defer src="clockwizz.js"
  data-wizz='{
-    "selector" : ".samp",
+    "xxxselector" : "samp",
     "touchEventName" : "samptouch"
  }'
 ></script>
@@ -22,6 +22,7 @@
 <div
  id="samp0"
  class="samp"
+ data-wizz
  style="
   height: 300px;
   width: 600px;
@@ -38,7 +39,7 @@
   font-size: 90px;
   background-color: hsla(40, 100%, 40%, 1.0);
  "
- xxxdata-wizz='{
+ data-wizz='{
   "touchEventName" : "ratTouchEvent",
   "mouseEventName" : "ratMouseEvt"
  }'
@@ -46,6 +47,7 @@
 <div
  id="samp2"
  class="samp"
+ data-wizz
  style="
   height: 300px;
   width: 600px;
@@ -73,6 +75,8 @@ window.addEventListener('load', e => {
     
     });
     
+    samp1.addEventListener('ratTouchEvent', e => sampHandler(e, samp1), { passive: false });
+    samp1.addEventListener('ratMouseEvt', e => sampHandler(e, samp1), { passive: false });
 });
 
 </script>

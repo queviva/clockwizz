@@ -6,19 +6,22 @@
 //
 //////////////////////////////////////////////////
 
-// window load closure for all clockwizz objs in the page
-window.addEventListener('load', () => { new (function () {
+// new closure for all clockwizz objs in the page
+new (function() {
 
-    const opts = JSON.parse(((document.querySelector(
-        'script[src*="clockwizz"][src$=".js"]'
-        ) || {}).dataset || {}).wizz || '{}');
+    'use strict';
 
     // the default prefs for all WizzerObjs themselves
     const defPrefs = {
-        selector: '.clockwizz',
+        selector: 'wizz',
         mouseEventName: 'mousewizz',
         touchEventName: 'touchwizz'
     };
+
+    // try to get any options set in the script's data-params
+    const opts = JSON.parse(((document.querySelector(
+        'script[src*="clockwizz"][src$=".js"]'
+    ) || {}).dataset || {}).wizz || '{}');
 
     // over-rite default prefs with opts from script's data-wizz param
     for (let p in opts) {
@@ -58,6 +61,7 @@ window.addEventListener('load', () => { new (function () {
 
     };
 
+    // lizzers {
     // method for calculating the wizz
     const wizzHandler = (e, clock, xVal, yVal, buff) => {
 
@@ -182,7 +186,7 @@ window.addEventListener('load', () => { new (function () {
 
     // method to pass touch coords to the wizzHandler
     const touchWizz = (e, clock) => {
-        wizzHandler(e, clock, e.touches[0].pageX, e.touches[0].pageY, clock.touchBuff);
+        wizzHandler(e, clock, e.touches[0].clientX, e.touches[0].clientY, clock.touchBuff);
     };
 
     // touch initializer
@@ -249,8 +253,9 @@ window.addEventListener('load', () => { new (function () {
 
     // method to pass mouse coords to the wizzHandler
     const mouseWizz = (e, clock) => {
-        wizzHandler(e, clock, e.pageX, e.pageY, clock.mouseBuff);
+        wizzHandler(e, clock, e.clientX, e.clientY, clock.mouseBuff);
     };
+    // }
 
     // the object for each wizzer on the page
     const Wizzer = function(obj) {
@@ -263,9 +268,9 @@ window.addEventListener('load', () => { new (function () {
 
         // if any valid prefs were given, set them
         for (let p in defPrefs) {
-            this.prefs[p] = dataPrefs[p] ? dataPrefs[p] : defPrefs[p];
+            this.prefs[p] = dataPrefs[p] !== undefined ? dataPrefs[p] : defPrefs[p];
         }
-        
+
         this.obj = obj;
 
         // the default threshold angles in degrees
@@ -291,11 +296,16 @@ window.addEventListener('load', () => { new (function () {
 
     };
 
-    // loop through all the specified objects
-    document.querySelectorAll(defPrefs.selector).forEach(obj => {
-
-        this[obj.id] = new Wizzer(obj);
-
+    // win.load init
+    window.addEventListener('load', e => {
+    
+        // loop through all data-param-specified objects
+        document.querySelectorAll(`[data-${ defPrefs.selector }]`).forEach(obj => {
+    
+            //this[obj.id] = new Wizzer(obj);
+            new Wizzer(obj);
+    
+        });
     });
 
-})()});
+})();
