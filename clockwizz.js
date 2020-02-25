@@ -184,11 +184,6 @@ new (function() {
 
     };
 
-    // method to pass touch coords to the wizzHandler
-    const touchWizz = (e, clock) => {
-        wizzHandler(e, clock, e.touches[0].clientX, e.touches[0].clientY, clock.touchBuff);
-    };
-
     // touch initializer
     const touchInit = (e, clock) => {
 
@@ -218,6 +213,11 @@ new (function() {
         // reset everything to zero
         clock.touchBuff.blankAllVals();
 
+    };
+
+    // method to pass touch coords to the wizzHandler
+    const touchWizz = (e, clock) => {
+        wizzHandler(e, clock, e.touches[0].clientX, e.touches[0].clientY, clock.touchBuff);
     };
 
     // for dealing with the first mouse instance
@@ -264,7 +264,7 @@ new (function() {
         this.prefs = {};
 
         // get any prefs set in individual tag data-wizz param
-        let dataPrefs = obj.dataset.wizz ? JSON.parse(obj.dataset.wizz) : {};
+        let dataPrefs = JSON.parse(obj.dataset.wizz || '{}');
 
         // if any valid prefs were given, set them
         for (let p in defPrefs) {
@@ -300,7 +300,8 @@ new (function() {
     window.addEventListener('load', e => {
     
         // loop through all data-param-specified objects
-        document.querySelectorAll(`[data-${ defPrefs.selector }]`).forEach(obj => {
+        //document.querySelectorAll(`[data-${ defPrefs.selector.replace(/[^a-z-]/gi,'') }]`).forEach(obj => {
+        document.querySelectorAll('.samp').forEach(obj => {
     
             //this[obj.id] = new Wizzer(obj);
             new Wizzer(obj);
