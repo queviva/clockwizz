@@ -10,7 +10,7 @@
             user-select: none;
         }
     </style>
-    <script id="wizzScript" src="clockwizz.js"
+    <script defer id="wizzScript" src="clockwizz.js"
      data-wizz='{
         "touchEventName" : "touchwizz",
         "mouseEventName" : "mousewizz"
@@ -69,7 +69,6 @@ Z
     </div>
 </body>
 <script id="demoScript">
-/*global CustomEvent*/
 
 window.addEventListener('load', e => {
     

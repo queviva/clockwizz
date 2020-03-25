@@ -27,7 +27,7 @@ new (function() {
     for (let p in opts) {
 
         // ... IF they exist in the default preferences
-        if (defPrefs[p] !== undefined) defPrefs[p] = opts[p];
+        if (defPrefs[p] !== undefined) defPrefs[p] = opts[p].replace(/[^a-z-]/gi,'');
 
     }
 
@@ -300,8 +300,7 @@ new (function() {
     window.addEventListener('load', e => {
     
         // loop through all data-param-specified objects
-        //document.querySelectorAll(`[data-${ defPrefs.selector.replace(/[^a-z-]/gi,'') }]`).forEach(obj => {
-        document.querySelectorAll('.samp').forEach(obj => {
+        document.querySelectorAll(`[data-${defPrefs.selector}]`).forEach(obj => {
     
             //this[obj.id] = new Wizzer(obj);
             new Wizzer(obj);
