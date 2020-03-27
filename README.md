@@ -1,9 +1,10 @@
 # clockwizz
-clockwise mouse|touch move event
+
+clockwise motion events for html elements
 
 [bite here](https://queviva.github.io/clockwizz/)
 
-
-[learn more](https://queviva.github.io/clockwizz/demo.html)
+javascript that allows any element to dispatch a clockwise motion event,
+that can be listened for, and handled, just like any other event
 
 
