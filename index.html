@@ -19,8 +19,9 @@
 </head>
 <body>
 
+    <div id="holder">
     <div
-     id="holder"
+     id="sceneDiv"
      class="clockwizz"
      data-wizz
      data-wizzXXX='{
@@ -39,7 +40,6 @@ Z
                 "/>
             </svg>
         </div>
-
 
         <img id="hackbox" src="hackBox0.svg">
         
@@ -65,15 +65,159 @@ Z
         ">
             <i>~queviva</i>
         </div>
-
+        
     </div>
+        <div class="qr">
+            make a circular motion, while touching or pressing,
+            on the image above
+        </div>
+        <div class="qr">
+            <b>clockwizz</b> adds a <i>clockwise motion event</i>
+            to any of the specified elements in a page;
+            listen for, and handle them, in the same way
+            you would any event.
+        </div>
+        <div class="qr">
+            include the script in a deferred script tag,
+            along with any optional parameters
+        </div>
+        <div class="qr">
+            <pre>
+                
+&lt;script defer src="clockwizz.js"
+ data-wizz='{
+    "touchEventName" : "touchwizz",
+    "mouseEventName" : "mousewizz",
+    "selector" : "wizz"
+ }'
+&gt;&lt;/script&gt;
+            </pre>
+        </div>
+        <div class="qr">
+            the "touchEventName" can be customized to
+            whatever you would like - the default name
+            for the clockwise touch event is "touchwizz"
+            <br><br>
+            same with the clockwise mouse motion event
+            <br><br>
+            the "selector" is what the script will use
+            to identify the elements that you would like
+            to add clockwizz events to - this is done by
+            giving that element a "data-wizz" parameter
+            <br><br>
+            any options can also be added in the data-wizz
+            parameter
+        </div>
+        <div class="qr">
+            the simplest example would be to just include
+            the script - the name must start with 'clockwizz'
+            and end with '.js' and use all default parameters
+            <br><br>
+            <pre>
+                
+&lt;script defer src="clockwizz.min.js"&gt;
+
+&lt;div id="sampleDiv" data-wizz&gt;
+...
+&lt;/div&gt;
+
+&lt;script&gt;
+
+    document.getElementById('sampleDiv')
+    .addEventListener(
+        'touchwizz',
+        e => {
+            // handle clockwise motion using
+            // e.detail.direction
+            // for the direction of the turning, and
+            // e.detail.mag
+            // for the magnitude of the turning
+        }
+    );
+        
+&lt;/script&gt;
+
+            </pre>
+        </div>
+    
+        <div class="qr">
+            the touch|mousewizz event's detail includes a
+            <i>direction</i>, which is either -1, 0, or 1
+            <br><br>
+            <pre>
+                
+ e.detail.direction = ...
+     1 ::: clockwise
+     0 ::: no turning
+    -1 ::: counter-clockwise
+    
+ e.detail.magnitude = ...
+    size, in pixels, of the turning
+    
+            </pre>
+        </div>
+        <div class="qr">
+            data-param tags can be used to customize
+            the event names - the following will give
+            an event named <i>touchClockTurn</i> and
+            an event named <i>moustClockTurn</i> to
+            any tag that contains a <i>data-clocker</i> parameter;
+            <i>clockDiv2</i> creates its own specific event name
+            - called 'div2clock' - using the data-param
+            <br><br>
+            <pre>
+                
+&lt;script defer src="clockwizz.js"
+ data-wizz='{
+    "touchEventName" : "touchClockTurn",
+    "mouseEventName" : "mouseClockTurn",
+    "selector" : "clocker"
+ }'
+&gt;&lt;/script&gt;
+
+&lt;div id="clockDiv0" data-clocker&gt; ... &lt;/div&gt;
+&lt;div id="clockDiv1" data-clocker&gt; ... &lt;/div&gt;
+&lt;div id="clockDiv2"
+ class="specialSauce"
+ data-clocker='{
+    "touchEventName" : "div2clock"
+ }'
+&gt;
+ ...
+&lt;/div&gt;
+
+&lt;script&gt;
+
+    document.getElementById('clockDiv0')
+        .addEventListener('touchwizz', e => { // ... });
+        
+    document.getElementById('clockDiv2')
+        .addEventListener('div2clock', e => { // ... });
+        
+        
+&lt;/script&gt;
+
+            </pre>
+        </div>
+        <div class="qr">
+            <ul>
+                
+            <li>include the defer script</li>
+            <li>add data-wizz parameter to tags</li>
+            <li>handle wizz events as usual</li>
+            </ul>
+        </div>
+    
+    </div>
+
+
 </body>
 <script id="demoScript">
 
 window.addEventListener('load', e => {
     
     const HB = document.getElementById('hackbox');
-    const hold = document.getElementById('holder');
+    const hold = document.getElementById('sceneDiv');
     const hrt = document.getElementById('heartSVG');
     const shad = document.getElementById('shadow');
     const que = document.getElementById('queviva');
