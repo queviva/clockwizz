@@ -223,7 +223,7 @@ new (function() {
     // for dealing with the first mouse instance
     const mouseInit = (e, clock) => {
 
-        // remove clock very listener from the obj
+        // remove the very clock listener from the obj
         clock.obj.removeEventListener('mousedown', clock.mouseInit);
 
         // add the mouse version of the wizzHandler
@@ -237,7 +237,7 @@ new (function() {
     // what to do when the mouse goes up
     const mouseEnd = (e, clock) => {
 
-        // remove clock very listener
+        // remove clock listener
         window.removeEventListener('mouseup', clock.mouseEnd);
 
         // remove the mouse move handler
@@ -300,12 +300,14 @@ new (function() {
     window.addEventListener('load', e => {
     
         // loop through all data-param-specified objects
-        document.querySelectorAll(`[data-${defPrefs.selector}]`).forEach(obj => {
+        document.querySelectorAll(
+            `[data-${defPrefs.selector}]:not(script)`
+        ).forEach(obj => {
     
-            //this[obj.id] = new Wizzer(obj);
             new Wizzer(obj);
     
         });
+
     });
 
 })();

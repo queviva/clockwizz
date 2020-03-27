@@ -31,7 +31,7 @@ body {
     position: relative;
     background-color: var(--holder-back);
     margin: auto;
-    width: 90%;
+    width: 100%;
     max-width: 700px;
     height: 300px;
     overflow: hidden;
@@ -96,9 +96,9 @@ body {
 }
 
 /*possibly a mobile landscaper*/
-@media screen 
-    and (orientation: landscape) 
-    and (max-width: 760px) 
+@media screen
+    and (orientation: landscape)
+    and (max-width: 760px)
     {
     #holder {
         height: 100px;
