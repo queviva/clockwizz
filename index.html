@@ -143,6 +143,8 @@ Z
         <div class="qr">
             the touch|mousewizz event's detail includes a
             <i>direction</i>, which is either -1, 0, or 1
+            and a <i>mag</i> giving the magnitude - in pixels -
+            of the size of the movement
             <br><br>
             <pre>
                 
@@ -151,7 +153,7 @@ Z
      0 ::: no turning
     -1 ::: counter-clockwise
     
- e.detail.magnitude = ...
+ e.detail.mag = ...
     size, in pixels, of the turning
     
             </pre>
