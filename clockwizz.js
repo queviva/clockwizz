@@ -6,40 +6,51 @@
 //
 //////////////////////////////////////////////////
 
-// new closure for all clockwizz objs in the page
-new (function() {
+// anonymouse closure
+(function() {
 
-    'use strict';
+    // debugg {
+    //'use strict';
+    //'use strong';
+    // localStorage.clear();
+    //}
 
-    // the default prefs for all WizzerObjs themselves
+    // default prefs for all WizzerObjs themselves {
     const defPrefs = {
         selector: 'wizz',
         mouseEventName: 'mousewizz',
         touchEventName: 'touchwizz'
     };
+    //}
 
-    // try to get any options set in the script's data-params
+    // try to get options set in script's data-params {
     const opts = JSON.parse(((document.querySelector(
         'script[src*="clockwizz"][src$=".js"]'
     ) || {}).dataset || {}).wizz || '{}');
+    //}
 
-    // over-rite default prefs with opts from script's data-wizz param
+    // over-rite default prefs with script's data-wizz param {
     for (let p in opts) {
 
         // ... IF they exist in the default preferences
-        if (defPrefs[p] !== undefined) defPrefs[p] = opts[p].replace(/[^a-z-]/gi,'');
+        if (defPrefs[p] !== undefined) defPrefs[p] = opts[p]
+        
+            // strip out anything that isn't letters or dash
+            .replace(/[^a-z-]/gi,'');
 
     }
+    //}
 
-    // an object for holding buffer values
+    // an object for holding buffer values {
     const WizzBuffer = function(eventName) {
         this.coords = [];
         this.atans = [];
         this.deltas = [];
         this.eventName = eventName;
     };
+    //}
 
-    // method to blank all values in a buffer
+    // method to blank all values in a buffer {
     WizzBuffer.prototype.blankAllVals = function() {
 
         this.coords = [];
@@ -60,8 +71,10 @@ new (function() {
         this.deltas.pop();
 
     };
-
+    //}
+    
     // lizzers {
+    
     // method for calculating the wizz
     const wizzHandler = (e, clock, xVal, yVal, buff) => {
 
@@ -255,9 +268,10 @@ new (function() {
     const mouseWizz = (e, clock) => {
         wizzHandler(e, clock, e.clientX, e.clientY, clock.mouseBuff);
     };
+    
     // }
 
-    // the object for each wizzer on the page
+    // the object for each wizzer on the page {
     const Wizzer = function(obj) {
 
         // the prefs holder for this specific wizzer
@@ -295,8 +309,9 @@ new (function() {
         this.obj.addEventListener('mousedown', this.mouseInit);
 
     };
+    //}
 
-    // win.load init
+    // win.load init {
     window.addEventListener('load', e => {
     
         // loop through all data-param-specified objects
@@ -309,5 +324,6 @@ new (function() {
         });
 
     });
+    //}
 
 })();
