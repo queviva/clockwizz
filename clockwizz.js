@@ -6,7 +6,7 @@
 //
 //////////////////////////////////////////////////
 
-// anonymouse closure
+// anonymouse closure [new not required]
 (function() {
 
     // debugg {
@@ -240,7 +240,7 @@
         clock.obj.removeEventListener('mousedown', clock.mouseInit);
 
         // add the mouse version of the wizzHandler
-        window.addEventListener('pointermove', clock.mouseWizz, { passive: false });
+        window.addEventListener('mousemove', clock.mouseWizz, { passive: false });
 
         // add the mouse stop listener
         window.addEventListener('mouseup', clock.mouseEnd);
@@ -254,7 +254,7 @@
         window.removeEventListener('mouseup', clock.mouseEnd);
 
         // remove the mouse move handler
-        window.removeEventListener('pointermove', clock.mouseWizz);
+        window.removeEventListener('mousemove', clock.mouseWizz);
 
         // add the mouse init listener back
         clock.obj.addEventListener('mousedown', clock.mouseInit);
@@ -297,7 +297,9 @@
         // blank the buffers on start
         this.touchBuff.blankAllVals();
         this.mouseBuff.blankAllVals();
-
+        /*
+        `touch mouse`.split(' ').forEach(t=>`Wizz Init End`.split(' ').forEach(R=>this[t+R]=e=>eval(t+R+'(e,this)')));
+        */
         this.touchWizz = e => touchWizz(e, this);
         this.touchInit = e => touchInit(e, this);
         this.touchEnd = e => touchEnd(e, this);
@@ -311,14 +313,18 @@
     };
     //}
 
-    // win.load init {
+    // init on win.load {
     window.addEventListener('load', e => {
     
         // loop through all data-param-specified objects
         document.querySelectorAll(
+            
+            // that are NOT a script tag
             `[data-${defPrefs.selector}]:not(script)`
+            
         ).forEach(obj => {
     
+            // make each one a wizzer
             new Wizzer(obj);
     
         });
