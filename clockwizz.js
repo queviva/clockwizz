@@ -24,8 +24,8 @@
     //}
 
     // try to get options set in script's data-params {
-    const opts = JSON.parse(((document.querySelector(
-        'script[src*="clockwizz"][src$=".js"]'
+    const opts = JSON.parse(((document.querySelector('\
+        script[src*="clockwizz"][src$=".js"]'
     ) || {}).dataset || {}).wizz || '{}');
     //}
 
