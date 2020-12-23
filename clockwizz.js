@@ -26,7 +26,7 @@
     // try to get options set in script's data-params {
     const opts = JSON.parse(((document.querySelector('\
         script[src*="clockwizz"][src$=".js"]'
-    ) || {}).dataset || {}).wizz || '{}');
+    ) || {}).dataset || {})[defPrefs.selector] || '{}');
     //}
 
     // over-rite default prefs with script's data-wizz param {
