@@ -8,7 +8,7 @@
  }'
 ></script>
 <style>
-.samp {
+[data-wizz] {
     height: 300px;
     width: 600px;
     font-size: 90px;
@@ -30,7 +30,6 @@ clockwizz creates an event for clockwise motion
 </div>
 <div
  id="samp0"
- class="samp"
  data-wizz
  style="
   background-color: hsla(20, 100%, 40%, 1.0);
@@ -38,7 +37,6 @@ clockwizz creates an event for clockwise motion
 ></div>
 <div
  id="samp1"
- class="samp"
  style="
   background-color: hsla(40, 100%, 40%, 1.0);
  "
@@ -49,7 +47,6 @@ clockwizz creates an event for clockwise motion
 ></div>
 <div
  id="samp2"
- class="samp"
  data-wizz
  style="
   background-color: hsla(60, 100%, 40%, 1.0);
@@ -65,9 +62,11 @@ window.addEventListener('load', e => {
         obj.hhh = ((((obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
         obj.innerHTML = obj.hhh;
         obj.style.backgroundColor = 'hsla(' + obj.hhh + ',100%,40%,1.0)';
+        //e.detail.event.preventDefault();
+        //e.detail.event.stopPropagation();
     }
     
-    document.querySelectorAll('.samp').forEach((samp, i) => {
+    document.querySelectorAll('[data-wizz]').forEach((samp, i) => {
         
         samp.hhh = 20 * (i + 1);
         samp.addEventListener('samptouch', e => sampHandler(e, samp), { passive: false });
