@@ -26,11 +26,11 @@ new (function(dset) {
     };
     //}
 
-    // prefs set in data- param {
+    // prefs set in data-param {
     const param_prefs = JSON.parse(Object.values(dset)[0] || '{}');
     //}
 
-    // over-rite default prefs with script's data- params {
+    // over-rite default prefs with script's data-params {
     const prefs = Object.assign({}, default_prefs, param_prefs);
     //}
 
