@@ -48,7 +48,9 @@ new (function(dset) {
     // method to blank all values in a buffer {
     WizzBuffer.prototype.blankAllVals = function() {
     
-        this.coords.fill(0).map(v => ({ x: 0, y: 0 }));
+        // coords can NOT be chained
+        this.coords.fill(0);
+        this.coords = this.coords.map(v => ({ x: 0, y: 0 }));
         this.atans.fill(0);
         this.deltas.fill(0);
     
