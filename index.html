@@ -126,16 +126,17 @@ Z
         for instance,
         in the case where <i>preventDefault</i> is false,
         the clockwizz handler might want to
-        <i>stopPropagation</i> or other such things; that
+        stop propagation or other such things; that
         would be done with: <i>e.detail.evt.stopPropagation()</i>
         <br><br>
         or, if you wanted to know the x-coordinate
-        location of the mouse when the clockwise event was
+        location of the mouse when the clockwizz event was
         generated, you can get that from: <i>e.detail.evt.clientX</i>
     </div>
             
     <div id="samp0" class="qr" data-wizz style="
-        margin:0px;border-radius:0px 10px;text-align:center;
+        margin:20px 0px;border-radius:0px 10px;text-align:center;
+        
     ">
     
     clockwise motions in this div will change the background color
@@ -203,6 +204,7 @@ Z
             <br>
             
             <li><b>min : 2</b> - this is the minimum angle
+            in degrees
             between consecutive lines that the clockwise
             calculator will interpret as an attempt to move
             in a clockwise motion
@@ -210,6 +212,7 @@ Z
             <br>
             
             <li><b>max : 90</b> - this is the maximum angle
+            in degrees
             between consecutive lines that the clockwise
             calculator will interpret as an attempt to move
             in a clockwise motion
@@ -222,15 +225,19 @@ Z
             clockwise motion - change this boolean value to
             <i>false</i> if you want default behaviors to occur
             </li>
-            
         </ul>
+        
     </div>
 
-    <div>
+    <div class="qr">
+        
+        <p>
         if you are happy with the defaults, you can simply
         include the <i>clockwizz</i> script, label any
         elements with <i>data-wizz</i> parameters, and
         write handlers for the <i>clockwizz</i> event
+        </p>
+        
         <pre>
             
 &lt;script src="clockwizz.js"&gt;&lt;/script&gt;
@@ -242,8 +249,10 @@ Z
             
     </div>
     </div>
-    
-    <br><br>
+    <hr>
+    <p class="qr" style="width:100%;text-align:right;">
+       <i>~queviva</i>
+    </p>
 </div>
 </body>
 
