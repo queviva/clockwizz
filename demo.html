@@ -1,12 +1,15 @@
-<!doctype html>
-<html>
+<!doctype html><html>
+    
 <head><title>wizz</title>
-<script defer src="clockwizz.js"
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!--script tag with customized event name -->
+<script src="clockwizz.js"
  data-wizz='{
-    "xxxselector" : "samp",
-    "touchEventName" : "samptouch"
+    "eventName" : "sampwizz"
  }'
 ></script>
+
 <style>
 [data-wizz] {
     height: 300px;
@@ -22,60 +25,74 @@
 }
 </style>
 </head>
+
 <body>
 <center>
-    <br>
-<div class="qa">
-clockwizz creates an event for clockwise motion
-</div>
-<div
- id="samp0"
- data-wizz
- style="
-  background-color: hsla(20, 100%, 40%, 1.0);
- "
-></div>
-<div
- id="samp1"
- style="
-  background-color: hsla(40, 100%, 40%, 1.0);
- "
+    
+<div class="qa"><br>turn clockwise on any element</div>
+
+<div id="samp0" data-wizz></div>
+
+<div id="samp1"
+ data-comment="this instance is customized"
  data-wizz='{
-  "touchEventName" : "ratTouchEvent",
-  "mouseEventName" : "ratMouseEvt"
+  "eventName" : "ratEvent",
+  "preventDefault" : false
  }'
 ></div>
-<div
- id="samp2"
- data-wizz
- style="
-  background-color: hsla(60, 100%, 40%, 1.0);
- "
-></div>
+
+<div id="samp2" data-wizz></div>
+
 </center>
 </body>
+
 <script id="demoScript">
 
 window.addEventListener('load', e => {
 
+    // handler to change the object color and display it
     function sampHandler(e, obj) {
-        obj.hhh = ((((obj.hhh + (3 * e.detail.direction)) % 360) + 360) % 360);
-        obj.innerHTML = obj.hhh;
-        obj.style.backgroundColor = 'hsla(' + obj.hhh + ',100%,40%,1.0)';
-        //e.detail.event.preventDefault();
-        //e.detail.event.stopPropagation();
+        
+        obj.hue = ((((obj.hue + (3 * e.detail.dir)) % 360) + 360) % 360);
+        obj.innerHTML = obj.hue;
+        obj.style.backgroundColor = 'hsla(' + obj.hue + ',100%,40%,1.0)';
+        
     }
     
+    // loop through all clockwizzers to set the colors and listeners
     document.querySelectorAll('[data-wizz]').forEach((samp, i) => {
         
-        samp.hhh = 20 * (i + 1);
-        samp.addEventListener('samptouch', e => sampHandler(e, samp), { passive: false });
-        samp.addEventListener('mousewizz', e => sampHandler(e, samp), { passive: false });
+        // set the color
+        samp.hue = 20 * (i + 1);
+        samp.style.backgroundColor = 'hsla(' + samp.hue + ',100%,40%,1.0)';
+
+        // add handler for the customized event name
+        samp.addEventListener('sampwizz', e => sampHandler(e, samp));
     
     });
     
-    samp1.addEventListener('ratTouchEvent', e => sampHandler(e, samp1), { passive: false });
-    samp1.addEventListener('ratMouseEvt', e => sampHandler(e, samp1), { passive: false });
+    // demonstration of handling an individually customized wizzer
+    // {
+    //
+    // listen for event name customized to just this element
+    samp1.addEventListener('ratEvent', e => {
+        
+        // pass it to the same handler just for example
+        sampHandler(e, samp1);
+        
+        // this object had its preventDefault set to false
+        // incase the default behavior is desired
+        // ...
+        // it can be handled, or ignored, using the
+        // event details _event_ reference
+        // or whatever custome name was provided
+        e.detail.evt.preventDefault();
+        e.detail.evt.stopPropagation();
+        
+        // tell the browser that this method isn't playing fair
+    }, { passive: false });
+    //}
+    
 });
 
 </script>
