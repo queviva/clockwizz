@@ -1,54 +1,54 @@
 //////////////////////////////////////////////////
-// queviva - clock|anti-clock|wizz-motion detector
+// queviva - MCMLXXXVIII                        /{
 //
-//  = send -1 0 1  based on clockmove
-//  = send magnitude
-//
-//////////////////////////////////////////////////
+// clock|anti-clock|wizz-motion detector
+/////////////////////////////////////////////////}
 
-// pass currentScript into async|defer script [new is necessary]
+// expiration check {
+//new Date() < new Date('2023-10-13') &&
+//}
 
-new (function(dset) {
-    
+// do not run anything until content loaded
+((dset) => document.addEventListener('DOMContentLoaded', e => (function() {
+
     // useful constants {
     const pi80 = 180 / Math.PI;
     //}
-
-    // default prefs for all wizzer objs themselves {
+    
+    // prefs for wizz objs {
     const default_prefs = {
-        selector: 'wizz',
-        mouseEventName: 'mousewizz',
-        touchEventName: 'touchwizz',
-        buffSize: 5,
-        min: 2,
-        max: 90,
-        preventDefault: true
+        selector        : 'wizz',
+        eventName       : 'clockwizz',
+        direction       : 'dir',
+        magnitude       : 'mag',
+        eventRef        : 'evt',
+        buffSize        : 5,
+        min             : 2,
+        max             : 90,
+        preventDefault  : true
     };
-    //}
-
-    // prefs set in data-param {
+    
+    // prefs set in script tag data-param
     const param_prefs = JSON.parse(Object.values(dset)[0] || '{}');
-    //}
-
-    // over-rite default prefs with script's data-params {
+    
+    // over-rite default prefs with script tag data-params
     const prefs = Object.assign({}, default_prefs, param_prefs);
+    
     //}
 
     // an object for holding buffer values {
-    const WizzBuffer = function(eventName) {
+    const WizzBuffer = function() {
         
         'coords|atans|deltas'.split('|').forEach((v,i) => {
             this[v] = new Array(prefs.buffSize + 1 - i);
         });
         
-        this.eventName = eventName;
     };
-    //}
 
-    // method to blank all values in a buffer {
+    // method to blank all values in a buffer
     WizzBuffer.prototype.blankAllVals = function() {
     
-        // coords can NOT be chained
+        // coords can NOT be chained - must fill then map
         this.coords.fill(0);
         this.coords = this.coords.map(v => ({ x: 0, y: 0 }));
         this.atans.fill(0);
@@ -61,7 +61,7 @@ new (function(dset) {
     const lizz = {
     
         // method for calculating the wizz
-        wizzHandler: (e, wizz, xVal, yVal, buff) => {
+        wizzHandler: (e, wizz, xVal, yVal, buff = wizz.buff) => {
             
             // chop the first coord off
             buff.coords.shift();
@@ -164,18 +164,18 @@ new (function(dset) {
             // }
     
             // dispatch the wizz event
-            wizz.obj.dispatchEvent(new CustomEvent(buff.eventName, {
+            wizz.obj.dispatchEvent(new CustomEvent(wizz.prefs.eventName, {
                 detail: {
-                    event: e,
-                    direction: dir,
-                    mag: Math.max(
+                    [prefs.direction] : dir,
+                    [prefs.magnitude] : Math.max(
                         Math.abs(
                             buff.coords[0].x - buff.coords[buff.coords.length - 1].x
                         ),
                         Math.abs(
                             buff.coords[0].y - buff.coords[buff.coords.length - 1].y
                         )
-                    )
+                    ),
+                    [prefs.eventRef] : e
                 }
             }));
     
@@ -189,7 +189,7 @@ new (function(dset) {
         // touch initializer
         touchInit: (e, wizz) => {
     
-            // remove the very listener
+            // remove this very listener
             wizz.obj.removeEventListener('touchstart', wizz.touchInit);
     
             // add the touch version of the wizzHandler
@@ -203,7 +203,7 @@ new (function(dset) {
         // remover|resetter on touch end
         touchEnd: (e, wizz) => {
     
-            // remove the very listener
+            // remove this very listener
             wizz.obj.removeEventListener('touchend', wizz.touchEnd);
     
             // remove the touch move handler
@@ -213,19 +213,19 @@ new (function(dset) {
             wizz.obj.addEventListener('touchstart', wizz.touchInit);
     
             // reset everything to zero
-            wizz.touchBuff.blankAllVals();
+            wizz.buff.blankAllVals();
     
         },
     
         // method to pass touch coords to the wizzHandler
         touchWizz: (e, wizz) => {
-            lizz.wizzHandler(e, wizz, e.touches[0].clientX, e.touches[0].clientY, wizz.touchBuff);
+            lizz.wizzHandler(e, wizz, e.touches[0].clientX, e.touches[0].clientY);
         },
     
         // for dealing with the first mouse instance
         mouseInit: (e, wizz) => {
     
-            // remove the very wizz listener from the obj
+            // remove this very listener
             wizz.obj.removeEventListener('mousedown', wizz.mouseInit);
     
             // add the mouse version of the wizzHandler
@@ -239,7 +239,7 @@ new (function(dset) {
         // what to do when the mouse goes up
         mouseEnd: (e, wizz) => {
     
-            // remove wizz listener
+            // remove this very listener
             window.removeEventListener('mouseup', wizz.mouseEnd);
     
             // remove the mouse move handler
@@ -249,16 +249,16 @@ new (function(dset) {
             wizz.obj.addEventListener('mousedown', wizz.mouseInit);
     
             // reset everything to zero
-            wizz.mouseBuff.blankAllVals();
+            wizz.buff.blankAllVals();
     
         },
     
         // method to pass mouse coords to the wizzHandler
         mouseWizz: (e, wizz) => {
-            lizz.wizzHandler(e, wizz, e.clientX, e.clientY, wizz.mouseBuff);
+            lizz.wizzHandler(e, wizz, e.clientX, e.clientY);
         }
     
-    }
+    };
     //}
 
     // loop through all data-selector objects {
@@ -267,10 +267,9 @@ new (function(dset) {
         // that are NOT a script tag
         `[data-${prefs.selector}]:not(script)`
             
-    ).forEach((obj, i) => {
+    // make each one a wizzer object ['weird new' is necessary]
+    ).forEach((obj, i) => new (function(obj) {
     
-        // make each one a wizzer
-        this[i] = new (function(obj) {
         
             // the prefs holder for this specific wizzer
             this.prefs = Object.assign({}, prefs,
@@ -280,13 +279,11 @@ new (function(dset) {
             // remember the html element
             this.obj = obj;
         
-            // create both mouse and touch buffers
-            this.touchBuff = new WizzBuffer(this.prefs.touchEventName);
-            this.mouseBuff = new WizzBuffer(this.prefs.mouseEventName);
+            // create a buffer object
+            this.buff = new WizzBuffer();
         
-            // blank the buffers on start
-            this.touchBuff.blankAllVals();
-            this.mouseBuff.blankAllVals();
+            // blank the buffer on start
+            this.buff.blankAllVals();
         
             // it's the same idiocy as making var with .bind(this)
             `touch mouse`.split(' ')
@@ -297,9 +294,16 @@ new (function(dset) {
             this.obj.addEventListener('touchstart', this.touchInit);
             this.obj.addEventListener('mousedown', this.mouseInit);
         
-        })(obj);
+        })(obj)
             
-    });
+    );
     //}
 
-})(document.currentScript.dataset);
+})()
+
+// pass in the dataset to preserve for when content-loaded
+))(document.currentScript.dataset)
+
+// expiration message {
+//=== undefined || (console.log('eXp!red'));
+//}
