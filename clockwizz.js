@@ -8,8 +8,12 @@
 //new Date() < new Date('2023-10-13') &&
 //}
 
+((
+    // preserve the dataset for when content loads
+    dset = document.currentScript.dataset
+
 // do not run anything until content loaded
-((dset) => document.addEventListener('DOMContentLoaded', e => (function() {
+) => document.addEventListener('DOMContentLoaded', e => (function() {
 
     // useful constants {
     const pi80 = 180 / Math.PI;
@@ -268,7 +272,7 @@
         `[data-${prefs.selector}]:not(script)`
             
     // make each one a wizzer object ['weird new' is necessary]
-    ).forEach((obj, i) => new (function(obj) {
+    ).forEach(obj => new (function() {
     
         
             // the prefs holder for this specific wizzer
@@ -294,15 +298,12 @@
             this.obj.addEventListener('touchstart', this.touchInit);
             this.obj.addEventListener('mousedown', this.mouseInit);
         
-        })(obj)
+        })()
             
     );
     //}
 
-})()
-
-// pass in the dataset to preserve for when content-loaded
-))(document.currentScript.dataset)
+})()))()
 
 // expiration message {
 //=== undefined || (console.log('eXp!red'));
