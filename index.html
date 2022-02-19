@@ -166,7 +166,7 @@ Z
         <ul>
             <li><b>selector : wizz</b> - this is the term
             that gets added to the element's tag as a
-            data-parm to indicate that it should generate
+            data-param to indicate that it should generate
             clockwise motion events; by default, that
             might look like this <i>&lt;div data-wizz&gt;</i>
             </li>
@@ -250,9 +250,37 @@ Z
     </div>
     </div>
     <hr>
-    <p class="qr" style="width:100%;text-align:right;">
-       <i>~queviva</i>
-    </p>
+    <div id="sig" class="qr" data-wizz
+     style="
+        height: 200px;
+     "
+    >
+        
+        <div id="sigRot" style="
+            position: absolute;
+            right: 10px;
+            width:100px;
+            height: 8px;
+            --rot: 0deg;
+            transform: rotate(var(--rot));
+            font-family: Luckiest Guy;
+        "><i>~queviva</i></div>
+        
+        <script>
+            let rotation = 0;
+            
+            const rot = document.getElementById('sigRot');
+            document.getElementById('sig')
+            .addEventListener('clockwizz',
+            (e, val=e.detail) => {
+                rot.style.setProperty(
+                    '--rot',
+                    (rotation -= val.dir * .2* val.mag)
+                    + 'deg'
+                )
+            });
+        </script>
+    </div>
 </div>
 </body>
 
