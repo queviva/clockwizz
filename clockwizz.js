@@ -22,7 +22,7 @@
     // prefs for wizz objs {
     const default_prefs = {
         selector        : 'wizz',
-        eventName       : 'clockwizz',
+        eventName       : 'clock-wizz',
         direction       : 'dir',
         magnitude       : 'mag',
         eventRef        : 'evt',
@@ -168,7 +168,8 @@
             // }
     
             // dispatch the wizz event
-            wizz.obj.dispatchEvent(new CustomEvent(wizz.prefs.eventName, {
+            wizz.obj.dispatchEvent(new CustomEvent(
+                wizz.prefs.eventName, {
                 detail: {
                     [prefs.direction] : dir,
                     [prefs.magnitude] : Math.max(
