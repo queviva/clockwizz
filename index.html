@@ -5,7 +5,7 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
 <link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
-<script id="wizzScript" src="clockwizz.js"></script>
+<script src="wizzmicro.js"></script>
 </head>
 
 <body>
@@ -32,9 +32,7 @@ Z
         <div id="queviva" class="qr"><i>~queviva</i></div>
     </div>
     
-    <div id="discussion">
-    
-    <div class="qr">
+    <div intro class="qr">
         make a circular motion, while touching or pressing,
         on the image above
         
@@ -52,7 +50,7 @@ Z
         the following example lists all default values
     </div>
 
-    <div class="qr">
+    <div prescript class="qr">
         <pre>
             
 &lt;script src="clockwizz.js"
@@ -100,7 +98,7 @@ Z
         </pre>
     </div>
     
-    <div class="qr">
+    <div direzione class="qr">
         <i>e.detail.dir</i> has three possible values:
         <ul style="font-family:cousine;">
             <li>&nbsp;1 ::: clockwise</li>
@@ -110,13 +108,13 @@ Z
         
     </div>
     
-    <div class="qr">
+    <div mag class="qr">
         <i>e.detail.mag</i> is a pixel value of the
         magnitude of the turning - the larger the circles
         being swept out, the larger the integer's value
     </div>
     
-    <div class="qr">
+    <div eventDetail class="qr">
         <i>e.detail.evt</i> is a reference to the event
         that generated the clockwise motion -
         that is, if a mouse event, or a touch event,
@@ -134,28 +132,31 @@ Z
         generated, you can get that from: <i>e.detail.evt.clientX</i>
     </div>
             
+    <div samp0 class="qr">
     <div id="samp0" class="qr" data-wizz style="
         margin:20px 0px;border-radius:0px 10px;text-align:center;
         
     ">
     
-    clockwise motions in this div will change the background color
-    <br><br>
-    <a href="demo.html">see this page and its source for
-    another example</a>
+        clockwise motions in this div will
+        change the background color
+        <br><br>
+        <a href="demo.html">see this page
+        and its source for another example</a>
         
-      <script>
-      const samp0 = document.getElementById('samp0');
-      samp0.hue = 12;
-      samp0.style.backgroundColor = 'hsla('+ samp0.hue +',100%,33%,1.0)';
-      samp0.addEventListener('clockwizz', e => {
-        samp0.hue = samp0.hue + (3 * e.detail.dir);
-        samp0.style.backgroundColor = 'hsla('+ samp0.hue +',100%,33%,1.0)';
-      });
-      </script>
+        <script>
+          const samp0 = document.getElementById('samp0');
+          samp0.hue = 12;
+          samp0.style.backgroundColor = 'hsla('+ samp0.hue +',100%,33%,1.0)';
+          samp0.addEventListener('clock-wizz', e => {
+            samp0.hue = samp0.hue + (3 * e.detail.dir);
+            samp0.style.backgroundColor =
+            'hsla('+ samp0.hue +',100%,33%,1.0)';
+          });
+        </script>
     </div>
-
-    <div class="qr">
+    </div>
+    <div defaults class="qr">
         ofcourse, all of these properties can have their
         names changed by using the data-parameter;
         the point is that you can change the name of
@@ -229,7 +230,7 @@ Z
         
     </div>
 
-    <div class="qr">
+    <div simple class="qr">
         
         <p>
         if you are happy with the defaults, you can simply
@@ -248,7 +249,7 @@ Z
         </pre>
             
     </div>
-    </div>
+    
     <hr>
     <div id="sig" class="qr" data-wizz
      style="
@@ -257,8 +258,8 @@ Z
     >
         
         <div id="sigRot" style="
-            position: absolute;
-            right: 10px;
+            position: relative;
+            float: right;
             width:100px;
             height: 8px;
             --rot: 0deg;
@@ -271,14 +272,16 @@ Z
             
             const rot = document.getElementById('sigRot');
             document.getElementById('sig')
-            .addEventListener('clockwizz',
+            .addEventListener('clock-wizz',
             (e, val=e.detail) => {
                 rot.style.setProperty(
                     '--rot',
                     (rotation -= val.dir * .2* val.mag)
                     + 'deg'
-                )
-            });
+                );
+                //val.ref.stopPropagation();
+                //val.ref.preventDefault();
+            },{passive:false});
         </script>
     </div>
 </div>
@@ -297,7 +300,9 @@ window.addEventListener('load', e => {
     let
     HBcs = window.getComputedStyle(HB),
     HBw = parseInt(HBcs.width, 10),
-    holdWidth = parseInt(window.getComputedStyle(hold).width, 10),
+    holdWidth = parseInt(
+        window.getComputedStyle(hold).width, 10
+    ),
     WW = holdWidth + HBw,
     left = HBw + parseInt(HBcs.left, 10),
     pulse = 1,
@@ -334,7 +339,7 @@ window.addEventListener('load', e => {
         
     };
     
-    hold.addEventListener('clockwizz', woggle, { passive: false });
+    hold.addEventListener('clock-wizz', woggle, { passive: false });
     
     woggle({detail:{dir:0, mag:0, event:{preventDefault:()=>{}}}});
     
