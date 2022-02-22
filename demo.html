@@ -4,11 +4,7 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 
 <!--script tag with customized event name -->
-<script src="clockwizz.js"
- data-wizz='{
-    "eventName" : "sampwizz"
- }'
-></script>
+<script src="clockwizz.js"></script>
 
 <style>
 [data-wizz] {
@@ -36,7 +32,7 @@
 <div id="samp1"
  data-comment="this instance is customized"
  data-wizz='{
-  "eventName" : "ratEvent",
+  "selector" : "rat",
   "preventDefault" : false
  }'
 ></div>
@@ -67,7 +63,7 @@ window.addEventListener('load', e => {
         samp.style.backgroundColor = 'hsla(' + samp.hue + ',100%,40%,1.0)';
 
         // add handler for the customized event name
-        samp.addEventListener('sampwizz', e => sampHandler(e, samp));
+        samp.addEventListener('clock-wizz', e => sampHandler(e, samp),{passive:false});
     
     });
     
@@ -75,7 +71,7 @@ window.addEventListener('load', e => {
     // {
     //
     // listen for event name customized to just this element
-    samp1.addEventListener('ratEvent', e => {
+    samp1.addEventListener('clock-rat', e => {
         
         // pass it to the same handler just for example
         sampHandler(e, samp1);
@@ -86,8 +82,8 @@ window.addEventListener('load', e => {
         // it can be handled, or ignored, using the
         // event details _event_ reference
         // or whatever custome name was provided
-        e.detail.evt.preventDefault();
-        e.detail.evt.stopPropagation();
+        e.detail.ref.preventDefault();
+        e.detail.ref.stopPropagation();
         
         // tell the browser that this method isn't playing fair
     }, { passive: false });
