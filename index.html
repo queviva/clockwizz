@@ -5,7 +5,7 @@
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
 <link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
-<script src="wizzmicro.js"></script>
+<script src="clockwizz.js"></script>
 </head>
 
 <body>
@@ -38,7 +38,8 @@ Z
         
         <br><br>
     
-        <b>clockwizz</b> adds a <i>clockwise motion event</i>
+        <b>clockwizz</b> adds a
+        <i>clockwise motion event</i>
         to any of the specified elements in a page;
         listen for, and handle them, in the same way
         you would any event.
@@ -56,13 +57,6 @@ Z
 &lt;script src="clockwizz.js"
  data-wizz='{
     "selector"       : "wizz"
-    "eventName"      : "clockwizz",
-    "direction"      : "dir",
-    "magnitude"      : "mag",
-    "eventRef"       : "evt",
-    "buffSize"       : 5,
-    "min"            : 2,
-    "max"            : 90,
     "preventDefault" : true
  }'
 &gt;&lt;/script&gt;
@@ -78,7 +72,7 @@ Z
 
     document.getElementById('sampleDiv')
     .addEventListener(
-        'clockwizz',
+        'clock-wizz',
         e => {
             // handle clockwise motion using
             //
@@ -88,7 +82,7 @@ Z
             // e.detail.mag
             // for the magnitude of the turn
             //
-            // e.detail.evt
+            // e.detail.ref
             // for reference to the event
         }
     );
@@ -115,21 +109,23 @@ Z
     </div>
     
     <div eventDetail class="qr">
-        <i>e.detail.evt</i> is a reference to the event
+        <i>e.detail.ref</i> is a reference to the event
         that generated the clockwise motion -
         that is, if a mouse event, or a touch event,
         or a pointer event, generated the clockwise event,
-        <i>e.detail.evt</i> is a reference to that event
+        <i>e.detail.ref</i> is a reference to that event
         <br><br>
         for instance,
         in the case where <i>preventDefault</i> is false,
         the clockwizz handler might want to
         stop propagation or other such things; that
-        would be done with: <i>e.detail.evt.stopPropagation()</i>
+        would be done with:
+        <i>e.detail.ref.stopPropagation()</i>
         <br><br>
         or, if you wanted to know the x-coordinate
         location of the mouse when the clockwizz event was
-        generated, you can get that from: <i>e.detail.evt.clientX</i>
+        generated, you can get that from:
+        <i>e.detail.ref.clientX</i>
     </div>
             
     <div samp0 class="qr">
@@ -156,67 +152,21 @@ Z
         </script>
     </div>
     </div>
+    
     <div defaults class="qr">
-        ofcourse, all of these properties can have their
-        names changed by using the data-parameter;
-        the point is that you can change the name of
-	the event you want to listen for,
-	or change <i>e.detail.dir</i> to <i>e.detail.direzione</i>,
-	whatever you wish; these are the default values:
+        the following options can be set in the
+        data-param
         
         <ul>
             <li><b>selector : wizz</b> - this is the term
             that gets added to the element's tag as a
             data-param to indicate that it should generate
             clockwise motion events; by default, that
-            might look like this <i>&lt;div data-wizz&gt;</i>
-            </li>
-            <br>
-            
-            <li><b>eventName : clockwizz</b> - this is the
-            event to listen for and handle
-            </li>
-            <br>
-
-            <li><b>direction : dir</b> - e.detail.dir is
-            the integer value of one for clockwise,
-            negative one for anti-clockwise,
-            or zero for no-turn
-            </li>
-            <br>
-            
-            <li><b>magnitude : mag</b> - e.detail.mag is
-            the size of the circle of clockwise turning
-            in an integer number of pixels
-            </li>
-            <br>
-            
-            <li><b>eventRef  : evt</b> - e.detail.evt is
-            a reference to whatever event actually generated
-            the clockwise motion
-            </li>
-            <br>
-            
-            <li><b>buffSize  : 5</b> - the calculation for
-            clockwise motion requires a certain number of
-            buffer coordinates; adjusting this positive
-            integer will make the buffer more discerning
-            </li>
-            <br>
-            
-            <li><b>min : 2</b> - this is the minimum angle
-            in degrees
-            between consecutive lines that the clockwise
-            calculator will interpret as an attempt to move
-            in a clockwise motion
-            </li>
-            <br>
-            
-            <li><b>max : 90</b> - this is the maximum angle
-            in degrees
-            between consecutive lines that the clockwise
-            calculator will interpret as an attempt to move
-            in a clockwise motion
+            might look like this
+            <i>&lt;div data-wizz&gt;</i>; this is also
+            appended to the event name,
+            <i>clock-[selector]</i> will alway be the
+            event to listen for
             </li>
             <br>
             
@@ -284,6 +234,7 @@ Z
             },{passive:false});
         </script>
     </div>
+
 </div>
 </body>
 
