@@ -45,10 +45,9 @@
             detail:{dir:d,mag:m,ref:e}
         }));
         
-        if (F.preventDefault){
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        F.preventDefault&&(
+        e.preventDefault(),
+        e.stopPropagation());
         
     },
 
