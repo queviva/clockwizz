@@ -1,4 +1,4 @@
-((D)=>document.addEventListener('DOMContentLoaded',(e,
+((D)=>document.addEventListener('DOMContentLoaded',(E,
 
     O=Object,
     
@@ -25,26 +25,24 @@
     
     C=new Array(6).fill(0).map(k=>({x:0,y:0})),
     
-    W=(e,m)=>{
+    W=(e,g)=>{
     
-        C.shift(), C.push({x:m.pageX,y:m.pageY});
+        C.shift(), C.push({x:g.pageX,y:g.pageY});
     
-        let mag = M.max(
+        let m=M.max(
             B(C[0].x-C.at(-1).x),
             B(C[0].y-C.at(-1).y)
         ),
         
-        area = C.reduce((p, c, i) => p +
+        a=C.reduce((p,c,i)=>p+
             (C[(i+1)%6].x + c.x) *
             (C[(i+1)%6].y - c.y),0
         ),
         
-        dir =
-            B(area)/(0.785*mag*mag)>0.2&&mag>5
-            ? M.sign(area) : 0;
+        d=B(a)/(0.785*m*m)>0.2&&m>5?M.sign(a):0;
         
         N.dispatchEvent(new CustomEvent('clock-'+R, {
-            detail:{dir:dir,mag:mag,ref:e}
+            detail:{dir:d,mag:m,ref:e}
         }));
         
         if (F.preventDefault){
