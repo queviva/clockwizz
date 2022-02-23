@@ -1,8 +1,4 @@
-((
-    
-    D=document.currentScript.dataset
-    
-) => document.addEventListener('DOMContentLoaded', (e,
+((D)=>document.addEventListener('DOMContentLoaded',(e,
 
     O=Object,
     
@@ -18,6 +14,7 @@
     T='touches',
     
     M=Math,
+    
     B=M.abs,
     
     PI80=180/M.PI
@@ -30,9 +27,7 @@
     
     F=Object.assign({},P,JSON.parse(N.dataset[R]||'{}')),
     
-    [C,A,D]='123'.split('').map((v,i)=>
-        new Array(6-i).fill(0).map(k=>i>0?k:{x:0,y:0})
-    ),
+    C=new Array(6).fill(0).map(k=>({x:0,y:0})),
     
     W=(e,m)=>{
     
@@ -50,20 +45,14 @@
                 (C[(i + 1) % 6].y - c.y), 0
         );
         
-        let circ = 0.785 * mag * mag;
-        
         let dir =
         
-            B(area)/circ > 0.2 && mag > 5
+            B(area)/(0.785 * mag * mag) > 0.2 && mag > 5
         
             ? M.sign(area) : 0;
         
         N.dispatchEvent(new CustomEvent('clock-'+R, {
-            detail: {
-                dir: dir,
-                mag: mag,
-                ref: e
-            }
+            detail:{dir:dir,mag:mag,ref:e}
         }));
 
         if(F.preventDefault){
@@ -87,4 +76,4 @@
         (z,Z[z],{passive:false})
     )))
 
-)))();
+)))(document.currentScript.dataset);
