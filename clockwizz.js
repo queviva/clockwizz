@@ -56,22 +56,24 @@
         
     },
 
-    Z={
-        mouse:e=>L(e,e),
-        touch:e=>L(e,e[T][0])
-    }
+    Z={mouse:e=>L(e,e),touch:e=>L(e,e[T][0])}
     
 )=>Object.keys(Z).forEach((
+    
     z,i,p,a=[z+'move',Z[z],{passive:false}]
+    
 )=>W.addEventListener(
     
     z+['down','start'][i],
     
-    ()=>[a, [z+['up','end'][i],()=>(
-        console.log('up '+ W.id),
+    ()=>[a,[z+['up','end'][i],()=>(
+        
         C=C.map(c=>({x:0,y:0})),
+        
         window.removeEventListener(...a)),
+        
         {once:true}]
+        
     ].forEach(e=>window.addEventListener(...e))
         
 )))))(document.currentScript.dataset);
