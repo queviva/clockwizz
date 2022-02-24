@@ -5,7 +5,8 @@
     P=Object.assign({
         selector        : 'wizz',
         preventDefault  :  true
-    },JSON.parse(Object.values(D)[0]||'{}')),
+    },
+    JSON.parse(Object.values(D)[0]||'{}')),
     
     R=P.selector,
     
@@ -15,17 +16,15 @@
     
     B=M.abs
     
-)=>document.querySelectorAll(`[data-${R}]:not(script)`
-
-).forEach((
+)=>document.querySelectorAll(`[data-${R}]:not(script)`).forEach((
     
-    N,V,J,
+    W,I,N,
     
-    F=Object.assign({},P,JSON.parse(N.dataset[R]||'{}')),
+    F=Object.assign({},P,JSON.parse(W.dataset[R]||'{}')),
     
-    C=new Array(6).fill(0).map(k=>({x:0,y:0})),
+    C=Array.from({length:6},c=>({x:0,y:0})),
     
-    W=(e,g)=>{
+    L=(e,g)=>{
     
         C.shift(), C.push({x:g.pageX,y:g.pageY});
     
@@ -39,9 +38,15 @@
             (C[(i+1)%6].y - c.y),0
         ),
         
-        d=B(a)/(0.785*m*m)>0.2&&m>5?M.sign(a):0;
+        d=B(a)/(0.785*m*m)>0.2 // % roundness
         
-        N.dispatchEvent(new CustomEvent('clock-'+R, {
+        &&m>5 // minimum radius
+        
+        &&C.every(c=>c.x!==0) // prevent jumps
+        
+        ?M.sign(a):0;
+        
+        W.dispatchEvent(new CustomEvent('clock-'+R, {
             detail:{dir:d,mag:m,ref:e}
         }));
         
@@ -52,17 +57,21 @@
     },
 
     Z={
-        mousemove:e=>W(e,e),
-        touchmove:e=>W(e,e[T][0])
+        mouse:e=>L(e,e),
+        touch:e=>L(e,e[T][0])
     }
-
-)=>[N,window].forEach((J,j)=>
     
-    Object.keys(Z).forEach((z,i)=>J.addEventListener(
-        [['mousedown','touchstart'],
-        ['mouseup','touchend']][j][i],
-        e=>window[(j===0?'add':'remove')+'EventListener']
-        (z,Z[z],{passive:false})
-    )))
-
-)))(document.currentScript.dataset);
+)=>Object.keys(Z).forEach((
+    z,i,p,a=[z+'move',Z[z],{passive:false}]
+)=>W.addEventListener(
+    
+    z+['down','start'][i],
+    
+    ()=>[a, [z+['up','end'][i],()=>(
+        console.log('up '+ W.id),
+        C=C.map(c=>({x:0,y:0})),
+        window.removeEventListener(...a)),
+        {once:true}]
+    ].forEach(e=>window.addEventListener(...e))
+        
+)))))(document.currentScript.dataset);
