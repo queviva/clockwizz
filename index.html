@@ -3,44 +3,342 @@
 <head><title>clockwizz</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link id="luckiestFont" href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
-<link id="demoStyles" rel="stylesheet" type="text/css" href="demoStyles.css">
+<style id="demoStyles">
+
+@font-face {
+    font-family : luckiest;
+    src : url(luckiest.ttf);
+}
+
+:root {
+    
+    --circ-h: 0;
+    --circ-s: 100%;
+    --circ-l: 100%;
+    --circ-a: 1;
+    
+    --lightness: hsl(
+        var(--circ-h),
+        var(--circ-s),
+        var(--circ-l)
+    );
+    
+    --midness: hsl(
+        var(--circ-h),
+        calc(0.5 * var(--circ-s)),
+        calc(0.6 * var(--circ-l))
+    );
+    
+    --darkness: hsl(
+        var(--circ-h),
+        var(--circ-s),
+        calc(0.35 * var(--circ-l))
+    );
+    
+    --blackness: hsl(
+        var(--circ-h),
+        var(--circ-s),
+        calc(0.20 * var(--circ-l))
+    );
+                
+    --main-color: var(--lightness);
+    --greyed-out: var(--darkness);
+    --back-color: #666;
+    --holder-back: #111;
+    --faded-txt: hsla(
+        var(--circ-h),
+        var(--circ-s),
+        var(--midness),
+        0.5
+    );
+    
+    --trans-speed: 0.3s;
+    
+}
+
+* {
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: var(--back-color);
+    font-size: 22px;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.holder {
+    
+    --nose-hsla: hsla(39, 100%, 30%, 0);
+    
+    --key: hsla(
+        var(--nose-h),
+        var(--nose-s),
+        var(--nose-l),
+        var(--nose-l)
+    );
+    
+    --fill: hsla(
+        var(--nose-h),
+        0%,
+        0%,
+        calc(var(--nose-l))
+    );
+    
+    --back: hsla(
+        calc(-60 + var(--nose-h)),
+        50%,
+        50%,
+        var(--nose-l)
+    );
+    
+    --shadow: hsla(
+        0,0%,0%,var(--nose-l)
+    )
+    
+    --shade: hsla(0, 0%, 0%, 0.35);
+    /* !!!MUST have spaces between -'s !!!
+    calc((var(--nose-l) - 30%)/(.8 - .3)) */
+    --shade-op : calc((var(--nose-l) - 10%) * 2.5);
+    
+    --ground-color: #000;
+    --floor-opacity: calc((var(--nose-l) - 30%) * 2);
+    
+	position: relative;
+    color: var(--main-color);
+    background-color: var(--holder-back);
+    margin: auto;
+    width: 100%;
+    max-width: 700px;
+    
+}
+
+a, a:hover, a:visited {
+    text-decoration: none;
+    color: var(--darkness);
+}
+
+.qa > div > a, .qa > div > a:hover, .qa > div > a:visited,
+.qb > div > a, .qb > div > a:hover, .qb > div > a:visited
+{
+    color: var(--lightness);
+}
+
+pre {
+    background-color: var(--midness);
+    margin: 0px;
+    padding: 10px;
+    color: var(--lightness);
+    overflow: auto;
+}
+
+hr {
+    border-top: 1px solid var(--blackness);
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    margin: 7px 0px 7px 0px;
+}
+
+b {
+    color: var(--darkness);
+}
+
+.qr {
+    padding: 10px;
+}
+
+.qa, .qb {
+    color: var(--midness);
+}
+
+.qa:after, .qb:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.qa > div, .qb > div {
+    float: left;
+    padding: 10px;
+    height: auto;
+}
+
+.qa > div:nth-child(1),
+.qb > div:nth-child(2) {
+  width: 65%;
+}
+
+.qa > div:nth-child(2),
+.qb > div:nth-child(1) {
+  width: 35%;
+}
+
+.qa > div > b,
+.qb > div > b {
+    color: var(--lightness);
+}
+
+.mobr {
+    display: none;
+}
+
+.hobr {
+    display: inline-block;
+}
+
+.abhr {
+    display: none;
+}
+
+/*possibly a portrait mobi-fone*/
+@media screen and (max-width:500px) {
+
+	.qa > div:nth-child(1),
+	.qa > div:nth-child(2),
+	.qb > div:nth-child(1),
+	.qb > div:nth-child(2)
+	{
+    	width: 100%;
+    }
+    
+    .mobr {
+        display: inline-block;
+    }
+    .hobr {
+        display: none;
+    }
+    .abhr {
+        display: block;
+    }
+    ul {
+        text-align: left;
+    }
+
+}
+
+/*possibly a mobile landscraper*/
+@media screen and (orientation: landscape) and (max-width: 760px) {
+    
+}
+
+.signature {
+    text-align: right;
+    font-family: 'luckiest';
+    font-style: italic;
+    height: 200px;
+    user-select:none;
+}
+
+</style>
+<style id="sceneStyles">
+
+#sceneDiv {
+    position: relative;
+    background-color: var(--midness);
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    padding: 0;
+}
+
+#hackbox {
+     position: absolute;
+     left: 40px;
+     top: 0px;
+     height: 300px;
+}
+
+#heartDiv {
+    position:absolute;
+    top: 0px;
+    left:110px;
+    height: 100px;
+}
+
+#shadow {
+    position: absolute;
+    left: 40px;
+    bottom: 5px;
+    height: 5px;
+    width: 400px;
+    background-color: var(--darkness);
+    opacity: 0.2;
+    border-radius: 50%;
+}
+
+#queviva {
+    font-family: 'luckiest';
+    text-align: right;
+    bottom: 0px;
+    padding:10px;
+    position: absolute;
+    width: 100%;
+    user-select: none;
+    color: var(--darkness);
+    opacity: 0.2;
+}
+
+/*possibly a mobile landscaper*/
+@media screen and (orientation: landscape) and (max-width: 760px) {
+    
+    #sceneDiv {
+        height: 100px;
+    }
+    #hackbox {
+        height: 100px;
+    }
+    #heartDiv {
+        top: -30px;
+        left: 20px;
+        transform: scale(0.4);
+    }
+    #shadow {
+        transform: scale(0.5, 0.5);
+    }
+}
+
+</style>
 <script src="clockwizz.js"></script>
 </head>
 
 <body>
-<div id="holder">
+<div class="holder">
     
-    <div id="sceneDiv" class="clockwizz" data-wizz>
+    <div demo class="qr">
+      <div id="sceneDiv" class="qr" data-wizz>
         <div id="heartDiv">
-            <svg id="heartSVG" transform="scale(0)" style="right:50px;bottom:20px;border:0px solid #fff;" height="200px" width="200px" xmlns="http://www.w3.org/2000/svg">
-                <path class="Xpath" fill="#a20" stroke="rgba(50, 10, 0, 0.95)" stroke-width="10" style="transform-origin:50% 50%" transform="rotate(-35 0 0) translate(30 5)" d="
-M 0 150
-A 500 500 0 0 0 0 50
-A 30 30 0 0 1 100 50
-A 30 30 0 0 1 100 150
-A 500 500 0 0 0 0 150
-Z
-                "/>
+            <svg id="heartSVG" transform="scale(0)" style="right:50px;bottom:20px;" height="200px" width="200px" xmlns="http://www.w3.org/2000/svg">
+                <path fill="var(--darkness)" stroke="var(--blackness)" stroke-width="10" style="transform-origin:50% 50%" transform="rotate(-35 0 0) translate(30 5)" d="M 0 150 A 500 500 0 0 0 0 50 A 30 30 0 0 1 100 50 A 30 30 0 0 1 100 150 A 500 500 0 0 0 0 150 Z"/>
             </svg>
         </div>
 
-        <img id="hackbox" src="hackBox0.svg">
+        <svg id="hackbox" viewbox="0 0 150 200">
+            <use xlink:href="hackBox0.svg#ikon"/>
+        </svg>
         
         <div id="shadow"></div>
         
         <div id="queviva" class="qr"><i>~queviva</i></div>
+      </div>
     </div>
     
     <div intro class="qr">
-        <center style="font-size:0.8em;">
+        <center style="
+            font-size:0.7em;
+            font-style: italic;
+            color: var(--darkness);
+        ">
         make a circular motion, while touching or pressing,
         on the image above
         </center>
         <br>
     
-        <b>clockwizz</b> adds a
-        <i>clockwise motion event</i>
+        <a href="clockwizz.js"><b>clockwizz.js</b></a>
+        adds a <i>clockwise motion event</i>
         to any of the specified elements in a page;
         listen for, and handle them, in the same way
         you would any event.
@@ -48,8 +346,9 @@ Z
         <br><br>
         
         include the script, along with any optional
-        parameters in a data-param;
+        parameters in a <i>data-param</i>;
         the following example lists all default values
+        
     </div>
 
     <div prescript class="qr">
@@ -93,77 +392,16 @@ Z
         </pre>
     </div>
     
-    <div direzione class="qr">
-        <i>e.detail.dir</i> has three possible values:
-        <ul style="font-family:cousine;">
-            <li>&nbsp;1 ::: clockwise</li>
-            <li>&nbsp;0 ::: no turn</li>
-            <li>-1 ::: counter-clockwise</li>
-        </ul>
-        
-    </div>
-    
-    <div mag class="qr">
-        <i>e.detail.mag</i> is a pixel value of the
-        magnitude of the turning - the larger the circles
-        being swept out, the larger the integer's value
-    </div>
-    
-    <div reffer class="qr">
-        <i>e.detail.ref</i> is a reference to the event
-        that generated the clockwise motion -
-        that is, if a mouse event, or a touch event,
-        or a pointer event, generated the clockwise event,
-        <i>e.detail.ref</i> is a reference to that event
-        <br><br>
-        for instance,
-        in the case where <i>preventDefault</i> is false,
-        the clockwizz handler might want to
-        stop propagation or other such things; that
-        would be done with:
-        <i>e.detail.ref.stopPropagation()</i>
-        <br><br>
-        or, if you wanted to know the x-coordinate
-        location of the mouse when the clockwizz event was
-        generated, you can get that from:
-        <i>e.detail.ref.clientX</i>
-    </div>
-            
-    <div samp0 class="qr">
-    <div id="samp0" class="qr" data-wizz style="
-        margin:20px 0px;border-radius:0px 10px;text-align:center;
-        
-    ">
-    
-        clockwise motions in this div will
-        change the background color
-        <br><br>
-        <a href="demo.html">see this page
-        and its source for another example</a>
-        
-        <script>
-          const samp0 = document.getElementById('samp0');
-          samp0.hue = 12;
-          samp0.style.backgroundColor = 'hsla('+ samp0.hue +',100%,33%,1.0)';
-          samp0.addEventListener('clock-wizz', e => {
-            samp0.hue = samp0.hue + (3 * e.detail.dir);
-            samp0.style.backgroundColor =
-            'hsla('+ samp0.hue +',100%,33%,1.0)';
-          });
-        </script>
-    </div>
-    </div>
-    
     <div defaults class="qr">
-        the following options can be set in the
-        data-param
         
+        what do all of these things mean?
+        <br>
         <ul>
-            <li><b>selector : wizz</b> - this is the term
+            <li><b>selector</b>: this is the term
             that gets added to the element's tag as a
-            data-param to indicate that it should generate
-            clockwise motion events; by default, that
-            might look like this
+            <i>data-param</i> to indicate that it
+            should generate clockwise motion events;
+            by default, that might look like this
             <i>&lt;div data-wizz&gt;</i>; this is also
             appended to the event name,
             <i>clock-[selector]</i> will alway be the
@@ -171,25 +409,100 @@ Z
             </li>
             <br>
             
-            <li><b>preventDefault : true </b> - by default,
-            <i>stopPropagation()</i> and <i>preventDefault()</i>
+            <li><b>preventDefault</b>: by default,
+            <i>stopPropagation()</i> and
+            <i>preventDefault()</i>
             are called on whatever event generated the
             clockwise motion - change this boolean value to
-            <i>false</i> if you want default behaviors to occur
+            <i>false</i> if you want default behaviors to
+            occur
             </li>
+            <br>
+        
+            <li><b>e.detail.dir</b>: this is the
+            direction of the clockwise motion; it has
+            three possible values
+            <ul style="font-family:cousine;">
+                <li>&nbsp;1 ::: clockwise</li>
+                <li>&nbsp;0 ::: no turn</li>
+                <li>-1 ::: counter-clockwise</li>
+            </ul>
+            </li>
+            <br>
+            
+            <li><b>e.detail.mag</b>: is a pixel value
+            of the magnitude of the turning - the
+            larger the circles being swept out, the
+            larger the integer's value
+            </li>
+            <br>
+    
+            <li><b>e.detail.ref</b> is a reference to the event
+            that generated the clockwise motion -
+            that is, if a mouse event, or a touch event,
+            or a pointer event, generated the clockwise event,
+            <i>e.detail.ref</i> is a reference to that event
+            <br><br>
+            for instance,
+            in the case where <i>preventDefault</i> is false,
+            the clockwizz handler might want to
+            stop propagation or other such things; that
+            would be done with:
+            <i>e.detail.ref.stopPropagation()</i>
+            <br><br>
+            or, if you wanted to know the x-coordinate
+            location of the mouse when the clockwizz event was
+            generated, you can get that from:
+            <i>e.detail.ref.clientX</i>
+            </li>
+            
         </ul>
-        
     </div>
-
-    <div simple class="qr">
+    
+    <div samp0 class="qr">
+      <div id="samp0" class="qr" data-wizz style="
+        border-radius:0px 10px;
+        text-align:center;
+      ">
+    
+        clockwise motions in this div will
+        change the background color
+        <br><br>
         
-        <p>
+        <a id="dlink" href="demo.html">see this page
+        and its source for another example</a>
+        
+        <script>
+          const samp0 = document.getElementById('samp0');
+          const dlink = document.getElementById('dlink');
+          samp0.hue = 0;
+          samp0.style.backgroundColor = 'hsla('+ samp0.hue +',50%,60%,1.0)';
+          samp0.style.color =
+            'hsla('+ samp0.hue +',80%,80%,1.0)';
+          dlink.style.color =
+            'hsla('+ samp0.hue +',50%,3%,1.0)';
+          samp0.addEventListener('clock-wizz', e => {
+            samp0.hue = samp0.hue + (3 * e.detail.dir);
+            samp0.style.backgroundColor =
+            'hsla('+ samp0.hue +',50%,60%,1.0)';
+            samp0.style.color =
+            'hsla('+ samp0.hue +',80%,80%,1.0)';
+            dlink.style.color =
+            'hsla('+ samp0.hue +',50%,3%,1.0)';
+          });
+        </script>
+        
+      </div>
+    </div>
+    
+    <hr>
+    
+    <div simple class="qr">
         if you are happy with the defaults, you can simply
         include the <i>clockwizz</i> script, label any
         elements with <i>data-wizz</i> parameters, and
         write handlers for the <i>clockwizz</i> event
-        </p>
-        
+        <br><br>
         <pre>
             
 &lt;script src="clockwizz.js"&gt;&lt;/script&gt;
@@ -202,10 +515,8 @@ Z
     </div>
     
     <hr>
-    <div id="sig" class="qr" data-wizz
-     style="
-        height: 200px;
-     "
+    <div id="sig" class="qr signature" data-wizz
+     style="height: 200px;"
     >
         
         <div id="sigRot" style="
@@ -215,7 +526,8 @@ Z
             height: 8px;
             --rot: 0deg;
             transform: rotate(var(--rot));
-            font-family: Luckiest Guy;
+            font-family: luckiest;
+            -webkit-text-stroke: 0.4px var(--holder-back);
         "><i>~queviva</i></div>
         
         <script>
