@@ -522,7 +522,7 @@ b {
         <div id="mic" data-wizz
           style="
             position:relative;
-            --deg: 135deg;
+            --deg: 163deg;
             background-image: linear-gradient(
                 var(--deg),
                 var(--midness),
@@ -589,15 +589,15 @@ b {
     </div>
     
     <hr>
-    <div nanscription class="qr">
+    <div nanscripto class="qr">
         <b>wizznano</b> objects
         must be activated by dispatching
         a custom event called <i>able-wizz</i>
         and sending some <i>boolean</i> true, or
         false, in the event's detail; this is
         what a simplementation might look like
-        that activated on <i>mouseenter</i>
-        and de-activated up a <i>mouse-sleeve</i>
+        that activated and de-activated
+        on <i>double-clicks</i>
         <br><br>
         <pre>
 &lt;script defer src="wizznano.js"&gt;&lt;/script&gt;
@@ -620,18 +620,14 @@ b {
         }
     );
     
-    nano.addEventListener('mouseenter', e => {
-        nano.dispatchEvent(
-            new CustomEvent('able-wizz',{detail:true})
+    let toggle = false;
+    
+    nano.addEventListener('dblclick', e => {
+        nano.dispatchEvent(new CustomEvent(
+            'able-wizz',
+            {detail:(toggle=!toggle)})
         )
     });
-    
-    nano.addEventListener('mouseleave', e => {
-        nano.dispatchEvent(
-            new CustomEvent('able-wizz',{detail:false})
-        )
-    });
-    
     
 &lt;/script&gt;
         </pre>
