@@ -14,7 +14,7 @@
     
     --circ-h: 0;
     --circ-s: 100%;
-    --circ-l: 100%;
+    --circ-l: 93%;
     --circ-a: 1;
     
     --lightness: hsl(
@@ -26,7 +26,7 @@
     --midness: hsl(
         var(--circ-h),
         calc(0.5 * var(--circ-s)),
-        calc(0.6 * var(--circ-l))
+        calc(0.7 * var(--circ-l))
     );
     
     --darkness: hsl(
@@ -302,14 +302,16 @@ b {
 }
 
 </style>
-<script src="clockwizz.js"></script>
+<script src="clockwizz.js"
+    data-opts='{"selector":"wizzer"}'
+></script>
 </head>
 
 <body>
 <div class="holder">
     
     <div demo class="qr">
-      <div id="sceneDiv" class="qr" data-wizz>
+      <div id="sceneDiv" class="qr" data-wizzer>
         <div id="heartDiv">
             <svg id="heartSVG" transform="scale(0)" style="right:50px;bottom:20px;" height="200px" width="200px" xmlns="http://www.w3.org/2000/svg">
                 <path fill="var(--darkness)" stroke="var(--blackness)" stroke-width="10" style="transform-origin:50% 50%" transform="rotate(-35 0 0) translate(30 5)" d="M 0 150 A 500 500 0 0 0 0 50 A 30 30 0 0 1 100 50 A 30 30 0 0 1 100 150 A 500 500 0 0 0 0 150 Z"/>
@@ -454,68 +456,134 @@ b {
             location of the mouse when the clockwizz event was
             generated, you can get that from:
             <i>e.detail.ref.clientX</i>
+            <br><br>
+            you can see <a href="demo.html">
+            more demonstrations with decriptive
+            code</a> if you want to
             </li>
             
         </ul>
     </div>
+    <hr>
     
-    <div samp0 class="qr">
-      <div id="samp0" class="qr" data-wizz style="
-        border-radius:0px 10px;
-        text-align:center;
-      ">
-    
-        clockwise motions in this div will
-        change the background color
+    <div nanintro style="
+        padding:0;margin:10px;color:var(--midness);
+    ">
+        
+        typically, a mouse-down or touch-start
+        interaction is most useful, <i>but</i>
+        if you are happy with the defaults, and
+        you don't mind handling all the events
+        or propagations yourself, there is a much
+        smaller
+        <a href="wizznano.js">nano~fied version</a>
+        that will probably do everything you'd want
+        
+        - that is to say, if you are ok with...
+        
+        <ul style="
+            list-style:circle;
+            text-align:left;
+            color:var(--lightness);
+        ">
+            
+            <li>using <i>defer</i> in the script
+            tag</li><br>
+            
+            <li>having <i>&lt;data-wizz&gt;</i> as the
+            selector</li><br>
+            
+            <li>having <i>clock-wizz</i> as the
+            motion event name</li><br>
+            
+            <li>handling <i>stopPropagation()</i>
+            and <i>preventDefault()</i> in the
+            clock-wizz event listener's
+            <i>e.detail.ref</i></li><br>
+            
+            <li>and using custom <i>dispatchEvents</i>
+            to interact with objects
+            </li>
+        
+        </ul>
+        
+        then you can use
+        <i><a href="">this version</a></i>, which
+        has been not simply compressed, but
+        intentionally <i>nano~fied</i> into the
+        smallest possible file that still provides
+        all the functionality necessary for clock-wizz
+        detection
         <br><br>
         
-        <a id="dlink" href="demo.html">see this page
-        and its source for another example</a>
+        this example uses <i>wizznano.js</i>
+        to respond to motion whenever the
+        mouse is over the element
+        
+    </div>
+    
+    <div nandemo class="qr">
+        <script defer src="wizznano.js"></script>
+        
+        <div id="mic" data-wizz
+          style="
+          position:relative;
+            background-color:var(--lightness);
+            height:150px;
+            text-align:center;
+          ">
+            <div id="rrr" style="
+                --wide: 115px;
+                background-color:var(--darkness);
+                position: absolute;
+                top: calc(50% - var(--wide)/2);
+                left: calc(50% - var(--wide)/2);
+                height: var(--wide);
+                width: var(--wide);
+                border: 10px solid var(--blackness);
+            "></div>
+        </div>
         
         <script>
-          const samp0 = document.getElementById('samp0');
-          const dlink = document.getElementById('dlink');
-          samp0.hue = 0;
-          samp0.style.backgroundColor = 'hsla('+ samp0.hue +',50%,60%,1.0)';
-          samp0.style.color =
-            'hsla('+ samp0.hue +',80%,80%,1.0)';
-          dlink.style.color =
-            'hsla('+ samp0.hue +',50%,3%,1.0)';
-          samp0.addEventListener('clock-wizz', e => {
-            samp0.hue = samp0.hue + (3 * e.detail.dir);
-            samp0.style.backgroundColor =
-            'hsla('+ samp0.hue +',50%,60%,1.0)';
-            samp0.style.color =
-            'hsla('+ samp0.hue +',80%,80%,1.0)';
-            dlink.style.color =
-            'hsla('+ samp0.hue +',50%,3%,1.0)';
-          });
-        </script>
         
-      </div>
+        const mic = document.getElementById('mic');
+        const rrr = document.getElementById('rrr');
+        
+        function D (j,e,v) {
+            j.dispatchEvent(new CustomEvent(e,{detail:v}));
+        }
+        
+        let sine = 0;
+        
+        mic.addEventListener('clock-wizz', e => {
+            rrr.style.setProperty(
+                '--wide',
+                ~~(115+Math.sin((sine+=0.06*e.detail.dir)
+                )*90)+'px'
+            )
+            e.detail.ref.stopPropagation();
+            e.detail.ref.preventDefault();
+        });
+        
+        for (let [e,b] of Object.entries({
+            mouseenter: true,
+            mouseleave: false,
+            touchstart: true,
+            touchend  : false
+        })){
+         mic.addEventListener(e,()=>D(mic,'able-wizz',b))
+        }
+        
+        </script>
+    
+    </div>
+    
+    <div nanscription class="qr">
+        
     </div>
     
     <hr>
-    
-    <div simple class="qr">
-        if you are happy with the defaults, you can simply
-        include the <i>clockwizz</i> script, label any
-        elements with <i>data-wizz</i> parameters, and
-        write handlers for the <i>clockwizz</i> event
-        <br><br>
-        <pre>
-            
-&lt;script src="clockwizz.js"&gt;&lt;/script&gt;
-
-&lt;div data-wizz&gt;
-...
-&lt;/div&gt;
-        </pre>
-            
-    </div>
-    
-    <hr>
-    <div id="sig" class="qr signature" data-wizz
+    <div id="sig" class="qr signature" data-wizzer
      style="height: 200px;"
     >
         
@@ -535,7 +603,7 @@ b {
             
             const rot = document.getElementById('sigRot');
             document.getElementById('sig')
-            .addEventListener('clock-wizz',
+            .addEventListener('clock-wizzer',
             (e, val=e.detail) => {
                 rot.style.setProperty(
                     '--rot',
@@ -603,7 +671,7 @@ window.addEventListener('load', e => {
         
     };
     
-    hold.addEventListener('clock-wizz', woggle, { passive: false });
+    hold.addEventListener('clock-wizzer', woggle, { passive: false });
     
     woggle({detail:{dir:0, mag:0, event:{preventDefault:()=>{}}}});
     
