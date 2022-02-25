@@ -439,36 +439,29 @@ b {
             </li>
             <br>
     
-            <li><b>e.detail.ref</b> is a reference to the event
+            <li><b>e.detail.ref</b> is a reference to
+            the actual event
             that generated the clockwise motion -
             that is, if a mouse event, or a touch event,
-            or a pointer event, generated the clockwise event,
-            <i>e.detail.ref</i> is a reference to that event
-            <br><br>
-            for instance,
-            in the case where <i>preventDefault</i> is false,
-            the clockwizz handler might want to
-            stop propagation or other such things; that
-            would be done with:
-            <i>e.detail.ref.stopPropagation()</i>
-            <br><br>
-            or, if you wanted to know the x-coordinate
-            location of the mouse when the clockwizz event was
-            generated, you can get that from:
-            <i>e.detail.ref.clientX</i>
-            <br><br>
-            you can see <a href="demo.html">
-            more demonstrations with decriptive
-            code</a> if you want to
+            or a pointer event, generated the clockwise
+            event, <i>e.detail.ref</i> is a reference
+            to that event
             </li>
-            
         </ul>
     </div>
-    <hr>
     
-    <div nanintro style="
-        padding:0;margin:10px;color:var(--midness);
+    <div demolink class="qr" style="
+        background-color:var(--blackness);
+        text-align:center;
     ">
+        <a href="demo.html" style="color:var(--midness);">
+        you can see more demonstrations
+        with decryptive code if you want to
+        </a>
+    </div>
+    
+    <br>
+    <div nanintro style="padding:0;margin:10px;">
         
         typically, a mouse-down or touch-start
         interaction is most useful, <i>but</i>
@@ -484,7 +477,7 @@ b {
         <ul style="
             list-style:circle;
             text-align:left;
-            color:var(--lightness);
+            color:var(--midness);
         ">
             
             <li>using <i>defer</i> in the script
@@ -516,31 +509,42 @@ b {
         detection
         <br><br>
         
+    </div>
+    
+    <hr>
+    <div nandemo class="qr">
         this example uses <i>wizznano.js</i>
         to respond to motion whenever the
         mouse is over the element
-        
-    </div>
+        <br><br>
     
-    <div nandemo class="qr">
-        <script defer src="wizznano.js"></script>
+        <script defer src="wizzmicro.js"></script>
         
         <div id="mic" data-wizz
           style="
-          position:relative;
-            background-color:var(--back-color);
+            position:relative;
+            --deg: 120deg;
+            background-image: linear-gradient(
+                var(--deg),
+                var(--midness),
+                var(--darkness)
+            );
             height:150px;
             text-align:center;
           ">
             <div id="rrr" style="
                 --wide: 115px;
-                background-color:var(--darkness);
+                background-image: linear-gradient(
+                    calc(-1 * var(--deg)),
+                    var(--blackness),
+                    var(--darkness)
+                );
                 position: absolute;
                 top: calc(50% - var(--wide)/2);
                 left: calc(50% - var(--wide)/2);
                 height: var(--wide);
                 width: var(--wide);
-                border: 10px solid var(--blackness);
+                border: 10px solid var(--holder-back);
             "></div>
         </div>
         
@@ -554,13 +558,18 @@ b {
         }
         
         let sine = 0;
+        let deg = 120;
         
         mic.addEventListener('clock-wizz', e => {
             rrr.style.setProperty(
                 '--wide',
                 ~~(115+Math.sin((sine+=0.06*e.detail.dir)
                 )*90)+'px'
-            )
+            );
+            mic.style.setProperty(
+                '--deg',
+                ~~(deg = deg - 3*e.detail.dir) +'deg'
+            );
             e.detail.ref.stopPropagation();
             e.detail.ref.preventDefault();
         });
@@ -578,15 +587,16 @@ b {
     
     </div>
     
+    <hr>
     <div nanscription class="qr">
         <b>wizznano</b> objects
         must be activated by dispatching
         a custom event called <i>able-wizz</i>
-        and sending the <i>boolean</i> true, or
+        and sending some <i>boolean</i> true, or
         false, in the event's detail; this is
         what a simplementation might look like
         that activated on <i>mouseenter</i>
-        and de-activated on <i>mouseleave</i>
+        and de-activated up a <i>mouse-sleeve</i>
         <br><br>
         <pre>
 &lt;script defer src="wizznano.js"&gt;&lt;/script&gt;
