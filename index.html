@@ -332,7 +332,7 @@ b {
         <center style="
             font-size:0.7em;
             font-style: italic;
-            color: var(--darkness);
+            color: var(--blackness);
         ">
         make a circular motion, while touching or pressing,
         on the image above
@@ -528,7 +528,7 @@ b {
         <div id="mic" data-wizz
           style="
           position:relative;
-            background-color:var(--lightness);
+            background-color:var(--back-color);
             height:150px;
             text-align:center;
           ">
@@ -579,7 +579,51 @@ b {
     </div>
     
     <div nanscription class="qr">
+        <b>wizznano</b> objects
+        must be activated by dispatching
+        a custom event called <i>able-wizz</i>
+        and sending the <i>boolean</i> true, or
+        false, in the event's detail; this is
+        what a simplementation might look like
+        that activated on <i>mouseenter</i>
+        and de-activated on <i>mouseleave</i>
+        <br><br>
+        <pre>
+&lt;script defer src="wizznano.js"&gt;&lt;/script&gt;
+
+&lt;div id="nano" data-wizz&gt; ... &lt;/div&gt;
+
+&lt;script&gt;
+
+    nano.addEventListener(
+        'clock-wizz',
+        (e, vals=e.detail) => {
         
+            // vals.dir is the direction
+            // vals.mag is the magnitude
+            
+            // suppress defaults
+            vals.ref.preventDefault();
+            vals.ref.stopPropagation();
+            
+        }
+    );
+    
+    nano.addEventListener('mouseenter', e => {
+        nano.dispatchEvent(
+            new CustomEvent('able-wizz',{detail:true})
+        )
+    });
+    
+    nano.addEventListener('mouseleave', e => {
+        nano.dispatchEvent(
+            new CustomEvent('able-wizz',{detail:false})
+        )
+    });
+    
+    
+&lt;/script&gt;
+        </pre>
     </div>
     
     <hr>
