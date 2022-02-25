@@ -1,89 +1,52 @@
 ((
-    
-    D=document.currentScript.dataset
-    
-) => document.addEventListener('DOMContentLoaded', (e,
-
     O=Object,
     
-    P=Object.assign({
-        
-        selector        : 'wizz',
-        preventDefault  : true
-        
-    },JSON.parse(Object.values(D)[0]||'{}')),
-    
-    R=P.selector,
-    
-    T='touches',
+    R='wizz',
     
     M=Math,
-    B=M.abs,
     
-    PI80=180/M.PI
+    B=M.abs
     
-) => document.querySelectorAll(`[data-${R}]:not(script)`
-
-).forEach((
+)=>document.querySelectorAll(`[data-${R}]`).forEach((
     
-    N,V,J,
+    W,I,N,
     
-    F=Object.assign({},P,JSON.parse(N.dataset[R]||'{}')),
+    C=Array.from({length:6},c=>({x:0,y:0})),
     
-    [C,A,D]='123'.split('').map((v,i)=>
-        new Array(6-i).fill(0).map(k=>i>0?k:{x:0,y:0})
-    ),
-    
-    Xs = new Array(6).fill(0),
-    Ys = new Array(6).fill(0),
-    
-    W=(e,m)=>{
-    
-        C.shift();
-    
-        C.push({ x: m.pageX, y: m.pageY });
-    
-        let mag = M.max(
-            M.abs(C[0].x-C.at(-1).x),
-            M.abs(C[0].y-C.at(-1).y)
+    L=(e,g)=>{
+        
+        C.shift(), C.push({x:g.pageX,y:g.pageY});
+       
+        let m=M.max(
+            B(C[0].x-C.at(-1).x),
+            B(C[0].y-C.at(-1).y)
+        ),
+        
+        a=C.reduce((p,c,i)=>p+
+            (C[(i+1)%6].x + c.x) *
+            (C[(i+1)%6].y - c.y),0
         );
         
-        let area = C.reduce((p, c, i) => p +
-                (C[(i + 1) % 6].x + c.x) *
-                (C[(i + 1) % 6].y - c.y), 0
-        );
-        
-        let circ = 0.785 * mag * mag;
-        
-        let dir = B(area)/circ > 0.2 ? M.sign(area) : 0;
-        
-        N.dispatchEvent(new CustomEvent('clock-'+R, {
-            detail: {
-                dir: dir,
-                mag: mag,
-                ref: e
-            }
+        W.dispatchEvent(new CustomEvent('clock-'+R, {
+            detail:{dir:
+                B(a)/(0.785*m*m)>0.2
+                &&m>5
+                &&C.every(c=>c.x!==0)
+                ?M.sign(a):0,
+            mag:m,ref:e}
         }));
-
-        if(F.preventDefault){
-            e.preventDefault();
-            e.stopPropagation();
-        }
         
     },
 
-    Z={
-        mousemove:e=>W(e,e),
-        touchmove:e=>W(e,e[T][0])
-    }
-
-)=>[N,window].forEach((J,j)=>
+    Z={mouse:e=>L(e,e),touch:e=>L(e,e.touches[0])},
     
-    Object.keys(Z).forEach((z,i)=>J.addEventListener(
-        [['mousedown','touchstart'],
-        ['mouseup','touchend']][j][i],
-        e=>window[(j===0?'add':'remove')+'EventListener']
-        (z,Z[z],{passive:false})
-    )))
-
-)))();
+    A=v=>{
+        C=C.map(c=>({x:0,y:0}));
+        for(let z in Z){
+            window[(v?'add':'remove')+'EventListener'](
+                z+'move',Z[z],{passive:false}
+            )
+        }
+    }
+    
+)=>W.addEventListener('able-'+R,e=>A(e.detail))))();
