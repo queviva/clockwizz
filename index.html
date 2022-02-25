@@ -128,7 +128,7 @@ a, a:hover, a:visited {
 }
 
 pre {
-    background-color: var(--midness);
+    background-color: var(--back-color);
     margin: 0px;
     padding: 10px;
     color: var(--lightness);
@@ -490,9 +490,8 @@ b {
             motion event name</li><br>
             
             <li>handling <i>stopPropagation()</i>
-            and <i>preventDefault()</i> in the
-            clock-wizz event listener's
-            <i>e.detail.ref</i></li><br>
+            and <i>preventDefault()</i>
+            with <i>e.detail.ref</i></li><br>
             
             <li>and using custom <i>dispatchEvents</i>
             to interact with objects
@@ -523,7 +522,7 @@ b {
         <div id="mic" data-wizz
           style="
             position:relative;
-            --deg: 120deg;
+            --deg: 135deg;
             background-image: linear-gradient(
                 var(--deg),
                 var(--midness),
@@ -535,7 +534,7 @@ b {
             <div id="rrr" style="
                 --wide: 115px;
                 background-image: linear-gradient(
-                    calc(-1 * var(--deg)),
+                    var(--deg),
                     var(--blackness),
                     var(--darkness)
                 );
@@ -566,10 +565,12 @@ b {
                 ~~(115+Math.sin((sine+=0.06*e.detail.dir)
                 )*90)+'px'
             );
+            /*
             mic.style.setProperty(
                 '--deg',
                 ~~(deg = deg - 3*e.detail.dir) +'deg'
             );
+            */
             e.detail.ref.stopPropagation();
             e.detail.ref.preventDefault();
         });
