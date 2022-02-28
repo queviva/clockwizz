@@ -38,7 +38,7 @@
             (C[(i+1)%6].y - c.y),0
         ),
         
-        d=B(a)/(0.785*m*m)>0.2 // % roundness
+        d=B(a)/m/m>0.175 // % roundness
         
         &&m>5 // minimum radius
         
