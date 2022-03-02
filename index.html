@@ -359,6 +359,7 @@ b {
 &lt;script src="clockwizz.js"
  data-wizz='{
     "selector"       : "wizz"
+    "minimim"        :  5
     "preventDefault" :  true
  }'
 &gt;&lt;/script&gt;
@@ -408,8 +409,12 @@ b {
             appended to the event name,
             <i>clock-[selector]</i> will alway be the
             event to listen for
-            </li>
-            <br>
+            </li><br>
+            
+            <li><b>minimum</b>: this is the smallest
+            size, in pixels, that will be considered
+            for a clockwise gesture
+            </li><br>
             
             <li><b>preventDefault</b>: by default,
             <i>stopPropagation()</i> and
@@ -418,8 +423,7 @@ b {
             clockwise motion - change this boolean value to
             <i>false</i> if you want default behaviors to
             occur
-            </li>
-            <br>
+            </li><br>
         
             <li><b>e.detail.dir</b>: this is the
             direction of the clockwise motion; it has
@@ -429,15 +433,13 @@ b {
                 <li>&nbsp;0 ::: no turn</li>
                 <li>-1 ::: counter-clockwise</li>
             </ul>
-            </li>
-            <br>
+            </li><br>
             
             <li><b>e.detail.mag</b>: is a pixel value
             of the magnitude of the turning - the
             larger the circles being swept out, the
             larger the integer's value
-            </li>
-            <br>
+            </li><br>
     
             <li><b>e.detail.ref</b> is a reference to
             the actual event
@@ -467,7 +469,7 @@ b {
         interaction is most useful, <i>but</i>
         if you are happy with the defaults, and
         you don't mind handling all the events
-        or propagations yourself, there is a much
+        and propagations yourself, there is a much
         smaller
         <a href="wizznano.js">nano~fied version</a>
         that will probably do everything you'd want
@@ -635,7 +637,9 @@ b {
     </div>
     
     <hr>
-    <div id="sig" class="qr signature" data-wizzer
+    <div id="sig" class="qr signature" data-wizzer='
+    {"selector":"rot"}
+    '
      style="height: 200px;"
     >
         
@@ -655,7 +659,7 @@ b {
             
             const rot = document.getElementById('sigRot');
             document.getElementById('sig')
-            .addEventListener('clock-wizzer',
+            .addEventListener('clock-rot',
             (e, val=e.detail) => {
                 rot.style.setProperty(
                     '--rot',
