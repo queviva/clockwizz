@@ -1,5 +1,5 @@
 //        // wait until the document is loaded
-((D)=>document.addEventListener('DOMContentLoaded',(
+(D=>document.addEventListener('DOMContentLoaded',(
 
     E,              // dom-loaded _E_vent
 
