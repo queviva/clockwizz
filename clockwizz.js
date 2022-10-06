@@ -1,4 +1,4 @@
-((D)=>document.addEventListener('DOMContentLoaded',(
+(D=>document.addEventListener('DOMContentLoaded',(
 
     E,O=Object,J=JSON.parse,M=Math,B=M.abs,
 
